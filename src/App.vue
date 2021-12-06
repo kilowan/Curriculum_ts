@@ -54,7 +54,7 @@
 </template>
 
 
-<script>
+<script lang="ts">
 //import company from './company.vue';
 import json from './CurriculumData.json';
 
@@ -72,7 +72,7 @@ export default {
 		}
 	},
   methods: {
-	save: function() {
+	/*save: function() {
 		const data = JSON.stringify(this.inputData)
 		const blob = new Blob([data], {type: 'text/plain'})
 		const e = document.createEvent('MouseEvents'),
@@ -82,15 +82,15 @@ export default {
 		a.dataset.downloadurl = ['text/json', a.download, a.href].join(':');
 		e.initEvent('click', true, false, window, 0, 0, 0, 0, 0, false, false, false, false, 0, null);
 		a.dispatchEvent(e);
-	},
-	createLevel(data){
+	},*/
+	createLevel(data: any){
 		if (data) {
 			let li = document.createElement("li");
 			li.innerHTML = this.innerData(data);
 			let ul = document.createElement("ul");
 			if (this.checkData(data)) {
-				data.values.forEach(element => {
-					let lis = this.createLevel(element);
+				data.values.forEach((element: any) => {
+					let lis : any = this.createLevel(element);
 					ul.append(lis);
 				});
 				li.append(ul);
@@ -98,10 +98,10 @@ export default {
 			return li;
 		}
 	},
-	checkData(data){
+	checkData(data: any){
 		return data.level === 2 && data.moreThanOne? true : data.values && data.values.length > 0? true : false;
 	},
-	innerData(data){
+	innerData(data: any){
 		switch (data.level) {
 			case 0: 
 				return '<h2>' + data.key + '</h2>';
@@ -120,16 +120,16 @@ export default {
 				return data.key;
 		}
 	},
-	getChildrens(parent){
+	getChildrens(parent: any){
 		let result = '';
-		parent.childNodes.forEach(children => {
+		parent.childNodes.forEach((children: any) => {
 			result += children.outerHTML;
 		});
 
 		return result;
 	}
   },
-  mounted:function() {
+  mounted() {
 	window.onload = function() {
 		document.querySelector('#experiencia').style.height = document.querySelector('#experience').clientHeight + 'px';
 		document.querySelector('#complementaria').style.height = document.querySelector('#complementary').clientHeight + 'px';
