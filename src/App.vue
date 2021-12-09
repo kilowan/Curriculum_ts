@@ -1,50 +1,50 @@
 <template>
 		<div id="page-wrap">			
 			<div id="contact-info" class="vcard">
-				<h1 class="fn">{{ inputData.values[0].value }}</h1>
-				<p>
-					{{ inputData.values[1].key }}: <span class="tel">{{ inputData.values[1].value }}</span><br />
-					{{ inputData.values[2].key }}: <a class="email" :href="'mailto:'+ inputData.values[2].value">{{ inputData.values[2].value }}</a><br />
-					{{ inputData.values[3].key }}: <a class="link" :href="'https://www.' + inputData.values[3].value">{{ inputData.values[3].value }}</a>
+				<h1 class="fn">{{ data.fullName }}</h1>
+				<p v-if="data.phoneNumber">
+					Teléfono: <span class="tel">{{ data.phoneNumber.number }}</span><br />
+					Email: <a class="email" :href="'mailto:'+ data.email.fullEmail">{{ data.email.fullEmail }}</a><br />
+					Linkedin: <a class="link" :href="'https://www.' + data.socialMedia[0].name">{{ data.socialMedia[0].name }}</a>
 				</p>
 			</div>					
 			<div id="objective">
-				<p>{{ inputData.values[4].value }}</p>
+				<p>{{ data.description }}</p>
 			</div>			
 			<div class="clear"></div>		
 			<dl>
-				<dt id="experiencia" v-if="inputData.values[7].values">{{ inputData.values[7].key }}</dt>
-				<dd id="experience" v-if="inputData.values[7].values">
+				<dt id="experiencia" v-if="experience">Experiencia profesional</dt>
+				<dd id="experience" v-if="experience">
 					<ul>
-						<li v-for="(company, firstindex) in inputData.values[7].values" v-bind:key="firstindex" v-html="getChildrens(createLevel(company))"></li>
+						<li v-for="(company, firstindex) in experience" v-bind:key="firstindex" v-html="getChildrens(createLevel(company))"></li>
 					</ul>
 				</dd>
 				<dd class="clear"></dd>
-				<dt id="academica" >{{ inputData.values[5].key }}</dt>
-				<dd id="academic">
+				<dt id="academica" v-if="academic">{{ academic.key }}</dt>
+				<dd id="academic" v-if="academic">
 					<ul>
-						<li v-for="(academicTraining, index) in inputData.values[5].values" v-bind:key="index" v-html="getChildrens(createLevel(academicTraining))"></li>
+						<li v-for="(academicTraining, index) in academic.values" v-bind:key="index" v-html="getChildrens(createLevel(academicTraining))"></li>
 					</ul>
 				</dd>
 				<dd class="clear"></dd>
-				<dt id="complementaria" >{{ inputData.values[6].key }}</dt>
-				<dd id="complementary">
+				<dt id="complementaria" v-if="other">{{ other.key }}</dt>
+				<dd id="complementary" v-if="other">
 					<ul>
-						<li v-for="(academicTraining, index) in inputData.values[6].values" v-bind:key="index" v-html="getChildrens(createLevel(academicTraining))"></li>
+						<li v-for="(academicTraining, index) in other.values" v-bind:key="index" v-html="getChildrens(createLevel(academicTraining))"></li>
 					</ul>
 				</dd>
 				<dd class="clear"></dd>
-				<dt id="idiomas" class="idiomas">{{ inputData.values[8].key }}</dt>
-				<dd id="languages">
+				<dt id="idiomas" class="idiomas" v-if="data.languageList">Idiomas</dt>
+				<dd id="languages" v-if="data.languageList">
 					<ul>
-						<li v-for="(languages, index) in inputData.values[8].values" v-bind:key="index"><strong>{{ languages.key }}:</strong> {{ languages.value }}</li>
+						<li v-for="(languages, index) in data.languageList" v-bind:key="index"><strong>{{ languages.name }}:</strong> {{ languages.level }}</li>
 					</ul>
 				</dd>				
 				<dd class="clear"></dd>					
-				<dt id="otros" class="otros">{{ inputData.values[9].key }}</dt>
-				<dd id="other">
+				<dt id="otros" class="otros" v-if="otherData">{{ otherData.key }}</dt>
+				<dd id="other" v-if="otherData">
 					<ul>
-						<li v-for="(other, index) in inputData.values[9].values" v-bind:key="index" v-html="getChildrens(createLevel(other))"></li>
+						<li v-for="(other, index) in otherData.values" v-bind:key="index" v-html="getChildrens(createLevel(other))"></li>
 					</ul>
 				</dd>					
 				<dd class="clear"></dd>
@@ -56,7 +56,8 @@
 
 <script lang="ts">
 //import company from './company.vue';
-import json from './CurriculumData.json';
+import axios from 'axios';
+import { Curriculum, Training, Content, SubContent, OtherData } from './Config/types';
 
 export default {
   name: 'App',
@@ -65,13 +66,32 @@ export default {
 			edit: true,
 			page: 'select',
 			selected: undefined,
-			inputData: json,
 			name: '',
 			add: false,
 			message: '',
+			data: Object,
+			experience: Object,
+			other: Object,
+			academic: Object,
+			otherData: Object,
 		}
 	},
   methods: {
+	async load(){
+      await axios({
+        method: 'get',
+        url: "http://localhost:8080/api/Curriculum/" + 1
+      }).then((data: any) =>{
+		  debugger;
+		  let datas : Curriculum = data.data
+		  this.data = datas;
+		  this.experience = this.mapExperience(datas.experience);
+		  this.other = this.mapOther(datas.otherTraining);
+		  this.academic = this.mapAcademic(datas.academicTraining)
+		  this.otherData = this.mapOtherData(datas.otherData);
+        }
+      );
+	},
 	/*save: function() {
 		const data = JSON.stringify(this.inputData)
 		const blob = new Blob([data], {type: 'text/plain'})
@@ -83,6 +103,123 @@ export default {
 		e.initEvent('click', true, false, window, 0, 0, 0, 0, 0, false, false, false, false, 0, null);
 		a.dispatchEvent(e);
 	},*/
+	mapOtherData(data: Array<OtherData>) {
+		let result: any = 
+		{ 
+			level: 0, 
+			key: "Otros datos", 
+			values: data.map((otherData: OtherData) => {
+			return { 
+						level: 1, 
+						key: otherData.name, 
+						values: otherData.values.map((value: string) => {
+							return { level: 2, key: value, values: [] }
+						}) 
+					}
+				})
+		};
+		debugger;
+		return result;
+	},
+	mapAcademic(data: Array<Training>){
+		let result : any = {
+			key:"Formación académica",
+			values: data.map((academic : Training) =>{
+				let values: Array<any> = [];
+				if(academic.place) values.push({ level:1, moreThanOne:false, key: "Centro/ Lugar", value: academic.place });
+				if(academic.graduationDate) values.push({ level:1, moreThanOne:false, key: "Graduación", value: academic.graduationDate });
+				if(academic.initDate) values.push({ level:1, moreThanOne:false, key: "Fecha inicio", value: academic.initDate });
+				if(academic.finishDate) values.push({ level:1, moreThanOne:false, key: "Fecha Fin", value: academic.finishDate });
+				if(academic.contents.length > 0) values.push(
+					{ level:1, 
+						moreThanOne:false, 
+						key: "Contenido", 
+						values: academic.contents.map((content: Content) =>{
+							return { level:2, key: content.name, values: []}
+						}) 
+					});
+				return { level:0, moreThanOne: true, key: academic.name, values: values}
+			})
+		};
+
+		return result;
+	},
+	mapOther(data: Array<Training>){
+		let training : Training = data[0];
+		let result : any = {
+			key:"Formación complementaria",
+			values: [
+				{
+					level:0,
+					key:training.name,
+					values:[
+						{
+							level:1,
+							key:"Contenido",
+							values: training.contents.map((content: Content) => {
+								return { 
+									level: 2, 
+									key: content.name, 
+									values: content.subContents.map((subContent: SubContent)=> {
+										return { level: 2, key: subContent, values: [] }
+								})}
+							})
+						}
+					]
+				}
+			]
+		}
+
+		return result;
+	},
+	mapExperience(data: any){
+		let result = data.map((exp:any) => {
+			return {
+				level: 1,
+				key: exp.name, 
+				values: [{
+							level:2,
+							key: "Centro/ Lugar",
+							value: exp.place,
+							values: []
+						},
+						{
+							level:2,
+							key: "Fecha inicio",
+							value: exp.initDate,
+							values: []
+						},
+						{
+							level:2,
+							key: "Fecha Fin",
+							value: exp.finishDate,
+							values: []
+						},
+						{
+							level:2,
+							key: "Contratos",
+							values: exp.contracts.map((datas: any) => {
+								return {level: 3, key: datas.name, values: [
+									{
+										key: "Proyectos", 
+										level: 4, 
+										values: datas.projects.map((project: any) => {
+										return {
+													level: 5, 
+													key: project.name, 
+													values: project.descriptionList.map((description: any) => {
+														return {level: 6, key: description, values:[]}
+													})
+												}
+										})
+									}
+								]}
+							})
+						}
+			]}
+		})
+		return result;
+	},
 	createLevel(data: any){
 		if (data) {
 			let li = document.createElement("li");
@@ -120,7 +257,7 @@ export default {
 				return data.key;
 		}
 	},
-	getChildrens(parent: any){
+	getChildrens(parent: HTMLElement){
 		let result = '';
 		parent.childNodes.forEach((children: any) => {
 			result += children.outerHTML;
@@ -130,6 +267,7 @@ export default {
 	}
   },
   mounted() {
+	this.load();
 	window.onload = function() {
 		document.querySelector('#experiencia').style.height = document.querySelector('#experience').clientHeight + 'px';
 		document.querySelector('#complementaria').style.height = document.querySelector('#complementary').clientHeight + 'px';
@@ -137,7 +275,6 @@ export default {
 		document.querySelector('#idiomas').style.height = document.querySelector('#languages').clientHeight + 'px';
 		document.querySelector('#otros').style.height = document.querySelector('#other').clientHeight + 'px';
 	};
-
   }
 }
 </script>
