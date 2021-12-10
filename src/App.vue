@@ -13,38 +13,100 @@
 			</div>			
 			<div class="clear"></div>		
 			<dl>
-				<dt id="experiencia" v-if="experience">Experiencia profesional</dt>
-				<dd id="experience" v-if="experience">
+				<dt id="experiencia" v-if="data.experience">Experiencia profesional</dt>
+				<dd id="experience" v-if="data.experience">
 					<ul>
-						<li v-for="(company, firstindex) in experience" v-bind:key="firstindex" v-html="getChildrens(createLevel(company))"></li>
+						<li v-for="(company, firstindex) in data.experience" v-bind:key="firstindex">
+							{{company.name}}
+							<ul>
+								<li>Centro/Lugar: {{company.place}}</li>
+								<li>Fecha inicio: {{new Date(company.initDate).toLocaleDateString()}}</li>
+								<li>Fecha Fin: {{new Date(company.finishDate).toLocaleDateString()}}</li>
+								<li>
+									Contratos:
+									<ul>
+										<li v-for="(contract, secondindex) in company.contracts" v-bind:key="secondindex">
+											{{contract.name}}
+											<ul>
+												<li>
+													Proyectos:
+													<ul>
+														<li v-for="(project, thirdindex) in contract.projects" v-bind:key="thirdindex">
+															{{project.name}}
+															<ul>
+																<li v-for="(description, fourthindex) in project.descriptionList" v-bind:key="fourthindex">{{description}}</li>
+															</ul>
+														</li>
+													</ul>
+												</li>
+											</ul>
+										</li>
+									</ul>
+								</li>
+							</ul>
+						</li>
 					</ul>
 				</dd>
 				<dd class="clear"></dd>
-				<dt id="academica" v-if="academic">{{ academic.key }}</dt>
-				<dd id="academic" v-if="academic">
+				<dt id="academica" v-if="data.academicTraining">Formación académica</dt>
+				<dd id="academic" v-if="data.academicTraining">
 					<ul>
-						<li v-for="(academicTraining, index) in academic.values" v-bind:key="index" v-html="getChildrens(createLevel(academicTraining))"></li>
+						<li v-for="(academicTraining, firstindex) in data.academicTraining" v-bind:key="firstindex">
+							{{academicTraining.name}}
+							<ul>
+								<li>Centro/ Lugar: {{academicTraining.place}}</li>
+								<li v-if="academicTraining.graduationDate">Graduación: {{new Date(academicTraining.graduationDate).getFullYear()}}</li>
+								<li v-if="academicTraining.contents.length >0">
+									Contenido:
+									<ul>
+										<li v-for="(content, secondindex) in academicTraining.contents" v-bind:key="secondindex">{{content.name}}</li>
+									</ul>
+								</li>
+							</ul>
+						</li>
 					</ul>
 				</dd>
 				<dd class="clear"></dd>
-				<dt id="complementaria" v-if="other">{{ other.key }}</dt>
-				<dd id="complementary" v-if="other">
+				<dt id="complementaria" v-if="data.otherTraining">Formación complementaria</dt>
+				<dd id="complementary" v-if="data.otherTraining">
 					<ul>
-						<li v-for="(academicTraining, index) in other.values" v-bind:key="index" v-html="getChildrens(createLevel(academicTraining))"></li>
+						<li v-for="(otherTraining, firstindex) in data.otherTraining" v-bind:key="firstindex">
+							<strong>{{otherTraining.name}}</strong>
+							<ul>
+								<li>
+									<strong>Contenido:</strong>
+									<ul>
+										<li v-for="(content, secondindex) in otherTraining.contents" v-bind:key="secondindex">
+											{{content.name}}
+											<ul>
+												<li v-for="(subcontent, thirdindex) in content.subContents" v-bind:key="thirdindex">{{subcontent}}</li>
+											</ul>
+										</li>
+									</ul>
+								</li>
+							</ul>
+						</li>
 					</ul>
 				</dd>
 				<dd class="clear"></dd>
 				<dt id="idiomas" class="idiomas" v-if="data.languageList">Idiomas</dt>
 				<dd id="languages" v-if="data.languageList">
 					<ul>
-						<li v-for="(languages, index) in data.languageList" v-bind:key="index"><strong>{{ languages.name }}:</strong> {{ languages.level }}</li>
+						<li v-for="(languages, firstindex) in data.languageList" v-bind:key="firstindex">
+							<strong>{{ languages.name }}:</strong> {{ languages.level }}
+						</li>
 					</ul>
 				</dd>				
 				<dd class="clear"></dd>					
-				<dt id="otros" class="otros" v-if="otherData">{{ otherData.key }}</dt>
-				<dd id="other" v-if="otherData">
+				<dt id="otros" class="otros" v-if="data.otherData">Otros datos</dt>
+				<dd id="other" v-if="data.otherData">
 					<ul>
-						<li v-for="(other, index) in otherData.values" v-bind:key="index" v-html="getChildrens(createLevel(other))"></li>
+						<li v-for="(other, firstindex) in data.otherData" v-bind:key="firstindex">
+							{{other.name}}
+							<ul v-if="other.values.length > 0">
+								<li v-for="(value, secondindex) in other.values" v-bind:key="secondindex">{{value}}</li>
+							</ul>
+						</li>
 					</ul>
 				</dd>					
 				<dd class="clear"></dd>
@@ -57,7 +119,7 @@
 <script lang="ts">
 //import company from './company.vue';
 import axios from 'axios';
-import { Curriculum, Training, Content, SubContent, OtherData } from './Config/types';
+import { Curriculum } from './Config/types';
 
 export default {
   name: 'App',
@@ -82,13 +144,8 @@ export default {
         method: 'get',
         url: "http://localhost:8080/api/Curriculum/" + 1
       }).then((data: any) =>{
-		  debugger;
-		  let datas : Curriculum = data.data
+		let datas : Curriculum = data.data
 		  this.data = datas;
-		  this.experience = this.mapExperience(datas.experience);
-		  this.other = this.mapOther(datas.otherTraining);
-		  this.academic = this.mapAcademic(datas.academicTraining)
-		  this.otherData = this.mapOtherData(datas.otherData);
         }
       );
 	},
@@ -103,168 +160,6 @@ export default {
 		e.initEvent('click', true, false, window, 0, 0, 0, 0, 0, false, false, false, false, 0, null);
 		a.dispatchEvent(e);
 	},*/
-	mapOtherData(data: Array<OtherData>) {
-		let result: any = 
-		{ 
-			level: 0, 
-			key: "Otros datos", 
-			values: data.map((otherData: OtherData) => {
-			return { 
-						level: 1, 
-						key: otherData.name, 
-						values: otherData.values.map((value: string) => {
-							return { level: 2, key: value, values: [] }
-						}) 
-					}
-				})
-		};
-		debugger;
-		return result;
-	},
-	mapAcademic(data: Array<Training>){
-		let result : any = {
-			key:"Formación académica",
-			values: data.map((academic : Training) =>{
-				let values: Array<any> = [];
-				if(academic.place) values.push({ level:1, moreThanOne:false, key: "Centro/ Lugar", value: academic.place });
-				if(academic.graduationDate) values.push({ level:1, moreThanOne:false, key: "Graduación", value: academic.graduationDate });
-				if(academic.initDate) values.push({ level:1, moreThanOne:false, key: "Fecha inicio", value: academic.initDate });
-				if(academic.finishDate) values.push({ level:1, moreThanOne:false, key: "Fecha Fin", value: academic.finishDate });
-				if(academic.contents.length > 0) values.push(
-					{ level:1, 
-						moreThanOne:false, 
-						key: "Contenido", 
-						values: academic.contents.map((content: Content) =>{
-							return { level:2, key: content.name, values: []}
-						}) 
-					});
-				return { level:0, moreThanOne: true, key: academic.name, values: values}
-			})
-		};
-
-		return result;
-	},
-	mapOther(data: Array<Training>){
-		let training : Training = data[0];
-		let result : any = {
-			key:"Formación complementaria",
-			values: [
-				{
-					level:0,
-					key:training.name,
-					values:[
-						{
-							level:1,
-							key:"Contenido",
-							values: training.contents.map((content: Content) => {
-								return { 
-									level: 2, 
-									key: content.name, 
-									values: content.subContents.map((subContent: SubContent)=> {
-										return { level: 2, key: subContent, values: [] }
-								})}
-							})
-						}
-					]
-				}
-			]
-		}
-
-		return result;
-	},
-	mapExperience(data: any){
-		let result = data.map((exp:any) => {
-			return {
-				level: 1,
-				key: exp.name, 
-				values: [{
-							level:2,
-							key: "Centro/ Lugar",
-							value: exp.place,
-							values: []
-						},
-						{
-							level:2,
-							key: "Fecha inicio",
-							value: exp.initDate,
-							values: []
-						},
-						{
-							level:2,
-							key: "Fecha Fin",
-							value: exp.finishDate,
-							values: []
-						},
-						{
-							level:2,
-							key: "Contratos",
-							values: exp.contracts.map((datas: any) => {
-								return {level: 3, key: datas.name, values: [
-									{
-										key: "Proyectos", 
-										level: 4, 
-										values: datas.projects.map((project: any) => {
-										return {
-													level: 5, 
-													key: project.name, 
-													values: project.descriptionList.map((description: any) => {
-														return {level: 6, key: description, values:[]}
-													})
-												}
-										})
-									}
-								]}
-							})
-						}
-			]}
-		})
-		return result;
-	},
-	createLevel(data: any){
-		if (data) {
-			let li = document.createElement("li");
-			li.innerHTML = this.innerData(data);
-			let ul = document.createElement("ul");
-			if (this.checkData(data)) {
-				data.values.forEach((element: any) => {
-					let lis : any = this.createLevel(element);
-					ul.append(lis);
-				});
-				li.append(ul);
-			}
-			return li;
-		}
-	},
-	checkData(data: any){
-		return data.level === 2 && data.moreThanOne? true : data.values && data.values.length > 0? true : false;
-	},
-	innerData(data: any){
-		switch (data.level) {
-			case 0: 
-				return '<h2>' + data.key + '</h2>';
-			case 1: 
-				return data.value? '<strong>' + data.key + '</strong>: ' + data.value : '<strong>' + data.key + ':<strong>';
-			default:
-			case 2: 
-				return data.value? data.key + ': ' + data.value : data.values.length > 1? data.key + ':' : data.key;
-			case 3: 
-				return '<strong>' + data.key + ':<strong>';
-			case 4: 
-				return data.key;
-			case 5: 
-				return '<strong>' + data.key + ':<strong>';
-			case 6: 
-				return data.key;
-		}
-	},
-	getChildrens(parent: HTMLElement){
-		let result = '';
-		parent.childNodes.forEach((children: any) => {
-			result += children.outerHTML;
-		});
-
-		return result;
-	}
   },
   mounted() {
 	this.load();

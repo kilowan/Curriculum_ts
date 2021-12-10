@@ -24,8 +24,8 @@ export interface Curriculum extends ObjectConstructor{
     name: string;
     type: number;
     place: string;
-    initDate?: Date;
-    finishDate?: Date;
+    initDate?: string;
+    finishDate?: string;
     contracts: Array<Contract>;
   }
   export interface Contract extends ObjectConstructor {
@@ -40,9 +40,9 @@ export interface Curriculum extends ObjectConstructor{
     name: string;
     type: number;
     place: string;
-    initDate?: Date;
-    finishDate?: Date;
-    graduationDate?: Date;
+    initDate?: string;
+    finishDate?: string;
+    graduationDate?: string;
     contents: Array<Content>;
   }
   export interface Content extends ObjectConstructor {
