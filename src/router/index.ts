@@ -2,6 +2,7 @@ import Vue from "vue";
 import VueRouter, { RouteConfig } from "vue-router";
 import Login from "../Login.vue";
 import PasswordRecovery from "../PasswordRecovery.vue";
+import CurriculumView from '../CurriculumView.vue';
 
 Vue.use(VueRouter);
 
@@ -15,6 +16,11 @@ const routes: Array<RouteConfig> = [
     path: "/PasswordRecovery",
     name: "PasswordRecovery",
     component: PasswordRecovery,
+  },
+  {
+    path: "/CurriculumView",
+    name: "CurriculumView",
+    component: CurriculumView,
   },
   /*{
     path: "/about",

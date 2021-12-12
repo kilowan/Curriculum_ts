@@ -4,11 +4,30 @@
 			<div class="m-2">
 				<div class="m-2">
 					<div style="width: 100%;">
-						<input style="width: 100%; margin-top: 10px;" type="text" placeholder="Correo electrónico o número de teléfono">
+						<input 
+							style="width: 100%; margin-top: 10px;" 
+							type="text" 
+							v-model="username"
+							placeholder="Nombre de usuario"
+						>
 					</div>
 					<div style="width: 100%; margin-top: 2%;">
-						<input style="width: 80%" class="m-2" v-if="!edit" type="password" placeholder="Contraseña"/>
-						<input style="width: 80%" class="m-2" v-else type="text" placeholder="Contraseña"/>
+						<input 
+							style="width: 80%" 
+							class="m-2" 
+							v-if="!edit" 
+							type="password" 
+							v-model="password"
+							placeholder="Contraseña"
+						/>
+						<input 
+							style="width: 80%" 
+							class="m-2" 
+							v-else 
+							type="text" 
+							v-model="password"
+							placeholder="Contraseña"
+						/>
 						<b-link style="width: 20%" @click="edit = !edit">
 							<b-icon v-if="!edit" icon="eye" aria-hidden="true"></b-icon>
 							<b-icon v-if="edit" icon="eye-slash" aria-hidden="true"></b-icon>
@@ -16,7 +35,7 @@
 					</div>
 				</div>
 				<div  class="m-2">
-					<b-button style="width: 100%;">Entrar</b-button>
+					<b-button @click="login" style="width: 100%;">Entrar</b-button>
 				</div>
 				<div class="m-2">
 					<b-link @click="$router.push('PasswordRecovery');">¿Has olvidado la contraseña?</b-link>
@@ -444,6 +463,8 @@ export default {
 			other: Object,
 			academic: Object,
 			otherData: Object,
+			username: '',
+			password: ''
 		}
 	},
 	watch: {
@@ -474,6 +495,31 @@ export default {
 		}
 	},
   methods: {
+	async login(){
+		if(this.username !== '')
+			await axios({
+				method: 'get',
+				url: "http://localhost:8080/api/Credentials/" + this.username + '/' + this.password
+			}).then((data: any) =>{
+				let username : string = this.username;
+				if(data.data) this.getUser(username);
+				}
+			);
+	},
+	async getUser(username: string){
+      await axios({
+        method: 'get',
+        url: "http://localhost:8080/api/User/" + username
+	})
+	.then((data: any) => {
+        this.$router.push({
+          name: 'CurriculumView', 
+		  params: {
+            user: data.data
+          }
+		});
+	});
+}
 	/*save: function() {
 		const data = JSON.stringify(this.inputData)
 		const blob = new Blob([data], {type: 'text/plain'})
