@@ -446,7 +446,6 @@
 
 <script lang="ts">
 import axios from 'axios';
-import { Curriculum } from './Config/types';
 
 export default {
   name: 'App',
@@ -512,8 +511,9 @@ export default {
         url: "http://localhost:8080/api/User/" + username
 	})
 	.then((data: any) => {
+		debugger;
         this.$router.push({
-          name: 'CurriculumView', 
+          name: 'CurriculumList', 
 		  params: {
             user: data.data
           }
@@ -532,16 +532,6 @@ export default {
 		a.dispatchEvent(e);
 	},*/
   },
-  async mounted() {
-      await axios({
-        method: 'get',
-        url: "http://localhost:8080/api/Curriculum/" + 1
-      }).then((data: any) =>{
-		let datas : Curriculum = data.data
-		  this.data = datas;
-        }
-      );
-  }
 }
 </script>
 

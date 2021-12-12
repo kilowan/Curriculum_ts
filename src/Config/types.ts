@@ -1,4 +1,4 @@
-export interface Curriculum extends ObjectConstructor{
+export interface CurriculumDetail extends ObjectConstructor{
     curriculumName: string;
     fullName: string;
     description: string;
@@ -10,6 +10,10 @@ export interface Curriculum extends ObjectConstructor{
     languageList: Array<Language>;
     socialMedia: Array<SocialMedia>;
     otherData: Array<OtherData>;
+  }
+  export interface Curriculum extends ObjectConstructor{
+    curriculumName: string;
+    curriculumId: number;
   }
   export interface PhoneNumber extends ObjectConstructor {
     number: number;
@@ -64,4 +68,18 @@ export interface Curriculum extends ObjectConstructor{
   export interface OtherData {
     name: string;
     values: Array<string>;
+  }
+  export interface Credentials {
+    username: string;
+    password: string;
+  }
+
+  export interface User {
+    userId: number;
+    name: string;
+    surname1: string;
+    surname2: string;
+    credentials: Credentials;
+    phoneNumbers: Array<PhoneNumber>;
+    emailList: Array<Email>;
   }

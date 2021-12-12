@@ -117,9 +117,7 @@
 
 
 <script lang="ts">
-//import company from './company.vue';
-import axios from 'axios';
-import { Curriculum } from './Config/types';
+//import { CurriculumDetail } from './Config/types';
 
 export default {
   name: 'CurriculumView',
@@ -131,7 +129,7 @@ export default {
 			name: '',
 			add: false,
 			message: '',
-			data: Object,
+			data: {},
 			experience: Object,
 			other: Object,
 			academic: Object,
@@ -179,15 +177,10 @@ export default {
 	},*/
   },
   async mounted() {
-      await axios({
-        method: 'get',
-        url: "http://localhost:8080/api/Curriculum/" + 1
-      }).then((data: any) =>{
-		let datas : Curriculum = data.data
-		  this.data = datas;
-        }
-      );
-  }
+	  	if(this.$route.params.curriculum) {
+			this.data = this.$route.params.curriculum;
+		}
+  	}
 }
 </script>
 
