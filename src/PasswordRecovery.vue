@@ -9,7 +9,7 @@
 			</div>
 			<hr>
 			<div class="m-2">
-				<b-button class="m-2" role="button" href="/login.php">Cancelar</b-button>
+				<b-button class="m-2" to="/">Cancelar</b-button>
 				<b-button class="m-2">Buscar</b-button>
 			</div>
 		</div>
@@ -18,7 +18,6 @@
 
 
 <script lang="ts">
-//import company from './company.vue';
 import axios from 'axios';
 import { Curriculum } from './Config/types';
 
@@ -41,7 +40,6 @@ export default {
 	},
 	watch: {
 		exp: function () {
-			debugger;
 			let experiencia: HTMLElement|null = document.querySelector('#experiencia');
 			let experience: HTMLElement|null = document.querySelector('#experience');
 			if(experiencia && experience) experiencia.style.height = experience.clientHeight + 'px';
