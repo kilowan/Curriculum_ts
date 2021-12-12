@@ -1,143 +1,21 @@
 <template>
-	<div style="text-align: center; margin: 0 auto; width:380px;">
-		<div class="m-2" style="text-align: center; box-shadow: 0 2px 4px rgb(0 0 0 / 10%), 0 8px 16px rgb(0 0 0 / 10%); border-radius: 8px; background-color: #FFF">
-			<h2 class="m-2">Recupera tu cuenta</h2>
-			<hr>
-			<div class="m-2">
-				<label class="m-2">Introduce tu correo electrónico o número de móvil para buscar tu cuenta.</label><br/>
-				<input style="width: 80%" class="m-2" type="text" placeholder="Correo electrónico o número de móvil"/>
-			</div>
-			<hr>
-			<div class="m-2">
-				<b-button class="m-2" role="button" href="/login.php">Cancelar</b-button>
-				<b-button class="m-2">Buscar</b-button>
-			</div>
-		</div>
-	</div>
-		<!--<div id="page-wrap">			
-			<div id="contact-info" class="vcard">
-				<h1 class="fn">{{ data.fullName }}</h1>
-				<p v-if="data.phoneNumber">
-					Teléfono: <span class="tel">{{ data.phoneNumber.number }}</span><br />
-					Email: <a class="email" :href="'mailto:'+ data.email.fullEmail">{{ data.email.fullEmail }}</a><br />
-					Linkedin: <a class="link" :href="'https://www.' + data.socialMedia[0].name">{{ data.socialMedia[0].name }}</a>
-				</p>
-			</div>					
-			<div id="objective">
-				<p>{{ data.description }}</p>
-			</div>			
-			<div class="clear"></div>		
-			<dl>
-				<dt id="experiencia" v-if="data.experience">Experiencia profesional</dt>
-				<dd id="experience" v-if="data.experience">
-					<ul>
-						<li v-for="(company, firstindex) in data.experience" v-bind:key="firstindex">
-							{{company.name}}
-							<ul>
-								<li>Centro/Lugar: {{company.place}}</li>
-								<li>Fecha inicio: {{new Date(company.initDate).toLocaleDateString()}}</li>
-								<li>Fecha Fin: {{new Date(company.finishDate).toLocaleDateString()}}</li>
-								<li>
-									Contratos:
-									<ul>
-										<li v-for="(contract, secondindex) in company.contracts" v-bind:key="secondindex">
-											{{contract.name}}
-											<ul>
-												<li>
-													Proyectos:
-													<ul>
-														<li v-for="(project, thirdindex) in contract.projects" v-bind:key="thirdindex">
-															{{project.name}}
-															<ul>
-																<li v-for="(description, fourthindex) in project.descriptionList" v-bind:key="fourthindex">{{description}}</li>
-															</ul>
-														</li>
-													</ul>
-												</li>
-											</ul>
-										</li>
-									</ul>
-								</li>
-							</ul>
-						</li>
-					</ul>
-				</dd>
-				<dd class="clear"></dd>
-				<dt id="academica" v-if="data.academicTraining">Formación académica</dt>
-				<dd id="academic" v-if="data.academicTraining">
-					<ul>
-						<li v-for="(academicTraining, firstindex) in data.academicTraining" v-bind:key="firstindex">
-							{{academicTraining.name}}
-							<ul>
-								<li>Centro/ Lugar: {{academicTraining.place}}</li>
-								<li v-if="academicTraining.graduationDate">Graduación: {{new Date(academicTraining.graduationDate).getFullYear()}}</li>
-								<li v-if="academicTraining.contents.length >0">
-									Contenido:
-									<ul>
-										<li v-for="(content, secondindex) in academicTraining.contents" v-bind:key="secondindex">{{content.name}}</li>
-									</ul>
-								</li>
-							</ul>
-						</li>
-					</ul>
-				</dd>
-				<dd class="clear"></dd>
-				<dt id="complementaria" v-if="data.otherTraining">Formación complementaria</dt>
-				<dd id="complementary" v-if="data.otherTraining">
-					<ul>
-						<li v-for="(otherTraining, firstindex) in data.otherTraining" v-bind:key="firstindex">
-							<strong>{{otherTraining.name}}</strong>
-							<ul>
-								<li>
-									<strong>Contenido:</strong>
-									<ul>
-										<li v-for="(content, secondindex) in otherTraining.contents" v-bind:key="secondindex">
-											{{content.name}}
-											<ul>
-												<li v-for="(subcontent, thirdindex) in content.subContents" v-bind:key="thirdindex">{{subcontent}}</li>
-											</ul>
-										</li>
-									</ul>
-								</li>
-							</ul>
-						</li>
-					</ul>
-				</dd>
-				<dd class="clear"></dd>
-				<dt id="idiomas" class="idiomas" v-if="data.languageList">Idiomas</dt>
-				<dd id="languages" v-if="data.languageList">
-					<ul>
-						<li v-for="(languages, firstindex) in data.languageList" v-bind:key="firstindex">
-							<strong>{{ languages.name }}:</strong> {{ languages.level }}
-						</li>
-					</ul>
-				</dd>				
-				<dd class="clear"></dd>					
-				<dt id="otros" class="otros" v-if="data.otherData">Otros datos</dt>
-				<dd id="other" v-if="data.otherData">
-					<ul>
-						<li v-for="(other, firstindex) in data.otherData" v-bind:key="firstindex">
-							{{other.name}}
-							<ul v-if="other.values.length > 0">
-								<li v-for="(value, secondindex) in other.values" v-bind:key="secondindex">{{value}}</li>
-							</ul>
-						</li>
-					</ul>
-				</dd>					
-				<dd class="clear"></dd>
-			</dl>
-			<dd class="clear"></dd>
-		</div>-->
+  <div id="app">
+    <router-view
+	/>
+  </div>
 </template>
 
 
 <script lang="ts">
-//import company from './company.vue';
 import axios from 'axios';
 import { Curriculum } from './Config/types';
+//import Login from './Login.vue';
 
 export default {
   name: 'App',
+  components: {
+	  //Login,
+	},
   data() {
 		return {
 			edit: false,
@@ -155,7 +33,6 @@ export default {
 	},
 	watch: {
 		exp: function () {
-			debugger;
 			let experiencia: HTMLElement|null = document.querySelector('#experiencia');
 			let experience: HTMLElement|null = document.querySelector('#experience');
 			if(experiencia && experience) experiencia.style.height = experience.clientHeight + 'px';
