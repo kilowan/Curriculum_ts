@@ -3,6 +3,7 @@ import VueRouter, { RouteConfig } from "vue-router";
 import Login from "../Login.vue";
 import PasswordRecovery from "../PasswordRecovery.vue";
 import CurriculumView from '../CurriculumView.vue';
+import CurriculumList from '../CurriculumList.vue';
 
 Vue.use(VueRouter);
 
@@ -16,6 +17,11 @@ const routes: Array<RouteConfig> = [
     path: "/PasswordRecovery",
     name: "PasswordRecovery",
     component: PasswordRecovery,
+  },
+  {
+    path: "/CurriculumList",
+    name: "CurriculumList",
+    component: CurriculumList,
   },
   {
     path: "/CurriculumView",
