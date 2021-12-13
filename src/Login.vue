@@ -38,7 +38,8 @@
 					<b-button @click="login" style="width: 100%;">Entrar</b-button>
 				</div>
 				<div class="m-2">
-					<b-link @click="$router.push('PasswordRecovery');">¿Has olvidado la contraseña?</b-link>
+					<!--<b-link @click="$router.push('PasswordRecovery')">¿Has olvidado la contraseña?</b-link>-->
+					<b-link>¿Has olvidado la contraseña?</b-link>
 				</div>
 				<hr />
 				<div class="m-2">
