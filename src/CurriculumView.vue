@@ -134,6 +134,7 @@ export default {
 			other: Object,
 			academic: Object,
 			otherData: Object,
+			token: '',
 		}
 	},
 	watch: {
@@ -179,6 +180,7 @@ export default {
   async mounted() {
 	  	if(this.$route.params.curriculum) {
 			this.data = this.$route.params.curriculum;
+			this.token = this.$route.params.token;
 		}
   	}
 }

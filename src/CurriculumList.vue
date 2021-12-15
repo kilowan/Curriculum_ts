@@ -22,21 +22,24 @@ export default {
   components: {},
   data() {
 		return {
-			curriculumData: []
+			curriculumData: [],
+			token: '',
 		}
 	},
 	methods:{
 		async getCurriculum(id: number){
 			await axios({
 				method: 'get',
-				url: "http://localhost:8080/api/Curriculum/" + id
+				headers: { Authorization: `Bearer ${this.token}` },
+				url: `http://localhost:8080/api/Curriculum/${id}`,
 			})
 			.then((data: any) => {
 				this.$router.push({
 					name: 'CurriculumView', 
 					params: {
 						curriculum: data.data,
-						curriculumId: id.toString()
+						curriculumId: id.toString(),
+						token: this.token,
 					}
 				});
 			});
@@ -45,9 +48,11 @@ export default {
   async mounted() {
 		if(this.$route.params.user) {
 			let user : any = this.$route.params.user;
+			this.token = this.$route.params.token;
 			await axios({
 				method: 'get',
-				url: "http://localhost:8080/api/Curriculum/" + user.userId + '/' + user.credentials.username
+				headers: { Authorization: `Bearer ${this.token}` },
+				url: `http://localhost:8080/api/Curriculum/${user.userId}/${user.credentials.username}`,
 			}).then((data: any) =>{
 				this.curriculumData = data.data
 			});
