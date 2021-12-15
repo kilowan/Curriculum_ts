@@ -129,6 +129,7 @@ export default {
 			username: '',
 			password: '',
 			data: Object,
+			token: '',
 		}
 	},
   methods: {
@@ -136,7 +137,7 @@ export default {
 		if(this.checkFields()){
 			await axios({
 				method: 'post',
-				url: "http://localhost:8080/api/User/" + this.username + '/' + this.password,
+				url: `http://localhost:8080/api/User/${this.username}/${this.password}`,
 				data:{
 					name: this.name,
 					surname1: this.surname1,
@@ -149,10 +150,10 @@ export default {
 					}
 				}
 			}).then((data: any) =>{
-				let username : string = this.username;
-				if(data.data) this.getUser(username);
+				if(data.data) {
+					this.login();
 				}
-			);
+			});
 		}
 
 	},
@@ -173,18 +174,19 @@ export default {
 		if(this.username !== '')
 			await axios({
 				method: 'get',
-				url: "http://localhost:8080/api/Credentials/" + this.username + '/' + this.password
+				url: `http://localhost:8080/api/Credentials/${this.username}/${this.password}`,
 			}).then((data: any) =>{
 				let username : string = this.username;
-				if(data.data) this.getUser(username);
+				if(data.data) {
+						this.token = data.data;
+						this.getUser(username, this.token);
 				}
-			);
+			});
 	},
 	async checkCredentials() {
-		debugger;
 			await axios({
 				method: 'get',
-				url: "http://localhost:8080/api/Credentials/" + this.username
+				url: `http://localhost:8080/api/Credentials/${this.username}`,
 			}).then((data: any) =>{
 				//this.error = !data.data;
 				this.state = 1;
@@ -193,10 +195,9 @@ export default {
 			});
 	},
 	async sendCode() {
-		debugger;
 			await axios({
 				method: 'get',
-				url: "http://localhost:8080/api/PasswordRecovery/" + this.username
+				url: `http://localhost:8080/api/PasswordRecovery/${this.username}`,
 			}).then((data: any) =>{
 				this.code = data.data;
 				data.data? this.state = 2 : this.state = 1;
@@ -205,7 +206,6 @@ export default {
 			});
 	},
 	async saveChanges() {
-		debugger;
 		await axios({
 			method: 'put',
 			url: "http://localhost:8080/api/PasswordRecovery/",
@@ -220,17 +220,18 @@ export default {
 			this.state = 1;
 		});
 	},
-	async getUser(username: string){
+	async getUser(username: string, token: string){
       await axios({
         method: 'get',
-        url: "http://localhost:8080/api/User/" + username
+		url: `http://localhost:8080/api/User/${username}`,
+		headers: { Authorization: `Bearer ${this.token}` }
 	})
 	.then((data: any) => {
-		debugger;
         this.$router.push({
           name: 'CurriculumList', 
 		  params: {
-            user: data.data
+            user: data.data,
+			token: token
           }
 		});
 	});

@@ -16,7 +16,7 @@
 			</div>
 			<hr>
 			<div class="m-2">
-				<b-button class="m-2" to="/">Cancelar</b-button>
+				<b-button class="m-2" to="/">Atrás</b-button>
 				<b-button v-if="state == 0" class="m-2" @click="checkCredentials">Buscar</b-button>
 				<b-button v-if="state == 1" class="m-2" @click="sendCode">Enviar código</b-button>
 				<b-button v-if="state == 2" class="m-2" @click="checkCode">Comprobar código</b-button>
@@ -49,7 +49,7 @@ export default {
 	async checkCredentials() {
 			await axios({
 				method: 'get',
-				url: "http://localhost:8080/api/Credentials/" + this.username
+				url: `http://localhost:8080/api/Credentials/${this.username}`,
 			}).then((data: any) =>{
 				//this.error = !data.data;
 				this.state = 1;
@@ -60,7 +60,7 @@ export default {
 	async sendCode() {
 			await axios({
 				method: 'get',
-				url: "http://localhost:8080/api/PasswordRecovery/" + this.username
+				url: `http://localhost:8080/api/PasswordRecovery/${this.username}`,
 			}).then((data: any) =>{
 				this.code = data.data;
 				data.data? this.state = 2 : this.state = 1;
@@ -71,7 +71,7 @@ export default {
 	async checkCode() {
 			await axios({
 				method: 'get',
-				url: "http://localhost:8080/api/PasswordRecovery/" + this.securityCode + '/' + this.username
+				url: `http://localhost:8080/api/PasswordRecovery/${this.securityCode}/${this.username}`,
 			}).then((data: any) =>{
 				this.code = data.data;
 				data.data? this.state = 3 : this.state = 2;
@@ -82,7 +82,7 @@ export default {
 	async saveChanges() {
 		await axios({
 			method: 'put',
-			url: "http://localhost:8080/api/Credentials/",
+			url: `http://localhost:8080/api/Credentials/${this.code}`,
 			data: {
 				username: this.username,
 				password: this.password
