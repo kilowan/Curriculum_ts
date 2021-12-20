@@ -1,34 +1,26 @@
 <template>
-	<div>		
-		<dt id="experiencia" v-if="experience">Experiencia profesional</dt>
-		<dd id="experience" v-if="experience">
+	<ul>
+		<li>
+			Proyectos:
 			<ul>
-				<li v-for="(company, firstindex) in experience" v-bind:key="firstindex">
-					{{company.name}}
+				<li v-for="(project, thirdindex) in projects" v-bind:key="thirdindex">
+					{{project.name}}
 					<ul>
-						<li>Centro/Lugar: {{company.place}}</li>
-						<li>Fecha inicio: {{new Date(company.initDate).toLocaleDateString()}}</li>
-						<li>Fecha Fin: {{new Date(company.finishDate).toLocaleDateString()}}</li>
-						<contracts-view :contracts="company.contracts" />
+						<li v-for="(description, fourthindex) in project.descriptionList" v-bind:key="fourthindex">{{description}}</li>
 					</ul>
 				</li>
 			</ul>
-		</dd>
-	</div>
+		</li>
+	</ul>
 </template>
 
 
 <script lang="ts">
 
-import ContractsView from './ContractsView.vue';
-
 export default {
-  name: 'ProfessionalExperienceView',
-  components: {
-	ContractsView
-  },
+  name: 'ProjectsView',
   props:{
-    experience: {
+    projects: {
       type: Array,
       required: true
     },
