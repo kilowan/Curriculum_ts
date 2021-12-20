@@ -10,105 +10,18 @@
 		</div>					
 		<div id="objective">
 			<p>{{ data.description }}</p>
-		</div>			
+		</div>		
 		<div class="clear"></div>		
 		<dl>
-			<dt id="experiencia" v-if="data.experience">Experiencia profesional</dt>
-			<dd id="experience" v-if="data.experience">
-				<ul>
-					<li v-for="(company, firstindex) in data.experience" v-bind:key="firstindex">
-						{{company.name}}
-						<ul>
-							<li>Centro/Lugar: {{company.place}}</li>
-							<li>Fecha inicio: {{new Date(company.initDate).toLocaleDateString()}}</li>
-							<li>Fecha Fin: {{new Date(company.finishDate).toLocaleDateString()}}</li>
-							<li>
-								Contratos:
-								<ul>
-									<li v-for="(contract, secondindex) in company.contracts" v-bind:key="secondindex">
-										{{contract.name}}
-										<ul>
-											<li>
-												Proyectos:
-												<ul>
-													<li v-for="(project, thirdindex) in contract.projects" v-bind:key="thirdindex">
-														{{project.name}}
-														<ul>
-															<li v-for="(description, fourthindex) in project.descriptionList" v-bind:key="fourthindex">{{description}}</li>
-														</ul>
-													</li>
-												</ul>
-											</li>
-										</ul>
-									</li>
-								</ul>
-							</li>
-						</ul>
-					</li>
-				</ul>
-			</dd>
+			<professional-experience-view v-if="data.experience.length > 0" :experience="data.experience" />
 			<dd class="clear"></dd>
-			<dt id="academica" v-if="data.academicTraining">Formación académica</dt>
-			<dd id="academic" v-if="data.academicTraining">
-				<ul>
-					<li v-for="(academicTraining, firstindex) in data.academicTraining" v-bind:key="firstindex">
-						{{academicTraining.name}}
-						<ul>
-							<li>Centro/ Lugar: {{academicTraining.place}}</li>
-							<li v-if="academicTraining.graduationDate">Graduación: {{new Date(academicTraining.graduationDate).getFullYear()}}</li>
-							<li v-if="academicTraining.contents.length >0">
-								Contenido:
-								<ul>
-									<li v-for="(content, secondindex) in academicTraining.contents" v-bind:key="secondindex">{{content.name}}</li>
-								</ul>
-							</li>
-						</ul>
-					</li>
-				</ul>
-			</dd>
+			<academic-training-view v-if="data.academicTraining.length > 0" :academicTraining="data.academicTraining" />
 			<dd class="clear"></dd>
-			<dt id="complementaria" v-if="data.otherTraining">Formación complementaria</dt>
-			<dd id="complementary" v-if="data.otherTraining">
-				<ul>
-					<li v-for="(otherTraining, firstindex) in data.otherTraining" v-bind:key="firstindex">
-						<strong>{{otherTraining.name}}</strong>
-						<ul>
-							<li>
-								<strong>Contenido:</strong>
-								<ul>
-									<li v-for="(content, secondindex) in otherTraining.contents" v-bind:key="secondindex">
-										{{content.name}}
-										<ul>
-											<li v-for="(subcontent, thirdindex) in content.subContents" v-bind:key="thirdindex">{{subcontent}}</li>
-										</ul>
-									</li>
-								</ul>
-							</li>
-						</ul>
-					</li>
-				</ul>
-			</dd>
+			<complementary-experience-view v-if="data.otherTraining.length > 0" :otherTraining="data.otherTraining" />
 			<dd class="clear"></dd>
-			<dt id="idiomas" class="idiomas" v-if="data.languageList">Idiomas</dt>
-			<dd id="languages" v-if="data.languageList">
-				<ul>
-					<li v-for="(languages, firstindex) in data.languageList" v-bind:key="firstindex">
-						<strong>{{ languages.name }}:</strong> {{ languages.level }}
-					</li>
-				</ul>
-			</dd>				
-			<dd class="clear"></dd>					
-			<dt id="otros" class="otros" v-if="data.otherData">Otros datos</dt>
-			<dd id="other" v-if="data.otherData">
-				<ul>
-					<li v-for="(other, firstindex) in data.otherData" v-bind:key="firstindex">
-						{{other.name}}
-						<ul v-if="other.values.length > 0">
-							<li v-for="(value, secondindex) in other.values" v-bind:key="secondindex">{{value}}</li>
-						</ul>
-					</li>
-				</ul>
-			</dd>					
+			<language-list v-if="data.languageList.length > 0" :languageList="data.languageList" />			
+			<dd class="clear"></dd>
+			<other v-if="data.otherData" :other="data.otherData" />
 			<dd class="clear"></dd>
 		</dl>
 		<dd class="clear"></dd>
@@ -117,10 +30,21 @@
 
 
 <script lang="ts">
-//import { CurriculumDetail } from './Config/types';
+import  AcademicTrainingView from './AcademicTrainingView.vue';
+import  Other from './OtherView.vue';
+import ProfessionalExperienceView from './ProfessionalExperienceView.vue';
+import ComplementaryExperienceView from './ComplementaryExperienceView.vue';
+import LanguageList from './LanguagesView.vue';
 
 export default {
   name: 'CurriculumView',
+  components: {
+	AcademicTrainingView,
+	Other,
+	ProfessionalExperienceView,
+	ComplementaryExperienceView,
+	LanguageList
+  },
   data() {
 		return {
 			edit: false,
