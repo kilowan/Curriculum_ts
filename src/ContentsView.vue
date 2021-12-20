@@ -1,37 +1,30 @@
 <template>
-	<div>		
-		<dt id="academica" v-if="academicTraining">Formación académica</dt>
-		<dd id="academic" v-if="academicTraining">
-			<ul>
-				<li v-for="(academic, firstindex) in academicTraining" v-bind:key="firstindex">
-					{{academic.name}}
-					<ul>
-						<li>Centro/ Lugar: {{academic.place}}</li>
-						<li v-if="academic.graduationDate">Graduación: {{new Date(academic.graduationDate).getFullYear()}}</li>
-						<li v-if="academic.contents.length >0">
-							<contents-view :contents="academic.contents" />
-						</li>
-					</ul>
-				</li>
-			</ul>
-		</dd>
+	<div>	
+		<strong>Contenido:</strong>
+		<ul>
+			<li v-for="(content, secondindex) in contents" v-bind:key="secondindex">
+				{{content.name}}
+				<ul>
+					<li v-for="(subcontent, thirdindex) in content.subContents" v-bind:key="thirdindex">{{subcontent}}</li>
+				</ul>
+			</li>
+		</ul>
 	</div>
 </template>
 
 
 <script lang="ts">
-import ContentsView from './ContentsView.vue'
 
 export default {
-  name: 'AcademicTrainingView',
-  components: {
-    ContentsView
-  },
+  name: 'ContentsView',
   props:{
-    academicTraining: {
+    contents: {
       type: Array,
       required: true
     },
+  },
+  components: {
+
   },
   data() {
 		return {}

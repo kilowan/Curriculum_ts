@@ -7,15 +7,7 @@
 					<strong>{{otherTrainingData.name}}</strong>
 					<ul>
 						<li>
-							<strong>Contenido:</strong>
-							<ul>
-								<li v-for="(content, secondindex) in otherTrainingData.contents" v-bind:key="secondindex">
-									{{content.name}}
-									<ul>
-										<li v-for="(subcontent, thirdindex) in content.subContents" v-bind:key="thirdindex">{{subcontent}}</li>
-									</ul>
-								</li>
-							</ul>
+							<contents-view :contents="otherTrainingData.contents" />
 						</li>
 					</ul>
 				</li>
@@ -26,17 +18,18 @@
 
 
 <script lang="ts">
+import ContentsView from './ContentsView.vue';
 
 export default {
   name: 'ComplementaryExperienceView',
+  components: {
+    ContentsView
+  },
   props:{
     otherTraining: {
       type: Array,
       required: true
     },
-  },
-  components: {
-
   },
   data() {
 		return {}
