@@ -7,7 +7,7 @@
 					<strong>{{otherTrainingData.name}}</strong>
 					<ul>
 						<li>
-							<contents-view :contents="otherTrainingData.contents" />
+							<contents-view :type="ContentType.complementary" :contents="otherTrainingData.contents" />
 						</li>
 					</ul>
 				</li>
@@ -19,6 +19,7 @@
 
 <script lang="ts">
 import ContentsView from './ContentsView.vue';
+import { ContentType } from './Config/types'
 
 export default {
   name: 'ComplementaryExperienceView',
@@ -32,7 +33,9 @@ export default {
     },
   },
   data() {
-		return {}
+		return {
+			ContentType: ContentType
+		}
 	},
 }
 </script>

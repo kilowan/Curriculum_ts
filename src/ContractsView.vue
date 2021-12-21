@@ -2,7 +2,7 @@
 	<li>
 		Contratos:
 		<ul>
-			<li v-for="(contract, secondindex) in company.contracts" v-bind:key="secondindex">
+			<li v-for="(contract, secondindex) in contracts" v-bind:key="secondindex">
 				{{contract.name}}
 				<projects :projects="contract.projects" />
 			</li>
@@ -28,6 +28,9 @@ export default {
   data() {
 		return {}
 	},
+  mounted(){
+    debugger;
+  }
 }
 </script>
 
