@@ -14,6 +14,7 @@
 
 
 <script lang="ts">
+//import { ContentType } from './Config/types';
 
 export default {
   name: 'ContentsView',
@@ -22,9 +23,10 @@ export default {
       type: Array,
       required: true
     },
-  },
-  components: {
-
+    type: {
+      type: String,
+      required: true
+    },
   },
   data() {
 		return {}

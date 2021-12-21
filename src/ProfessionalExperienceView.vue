@@ -9,7 +9,7 @@
 						<li>Centro/Lugar: {{company.place}}</li>
 						<li>Fecha inicio: {{new Date(company.initDate).toLocaleDateString()}}</li>
 						<li>Fecha Fin: {{new Date(company.finishDate).toLocaleDateString()}}</li>
-						<contracts-view :contracts="company.contracts" />
+						<contracts-view v-if="company.contracts.length > 0" :contracts="company.contracts" />
 					</ul>
 				</li>
 			</ul>

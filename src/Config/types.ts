@@ -83,3 +83,7 @@ export interface CurriculumDetail extends ObjectConstructor{
     phoneNumbers: Array<PhoneNumber>;
     emailList: Array<Email>;
   }
+  export enum ContentType {
+    Academic,
+    Complementary,
+  }

@@ -9,7 +9,7 @@
 						<li>Centro/ Lugar: {{academic.place}}</li>
 						<li v-if="academic.graduationDate">Graduación: {{new Date(academic.graduationDate).getFullYear()}}</li>
 						<li v-if="academic.contents.length >0">
-							<contents-view :contents="academic.contents" />
+							<contents-view :contents="academic.contents" :type="ContentType.academic" />
 						</li>
 					</ul>
 				</li>
@@ -21,6 +21,7 @@
 
 <script lang="ts">
 import ContentsView from './ContentsView.vue'
+import { ContentType } from './Config/types'
 
 export default {
   name: 'AcademicTrainingView',
@@ -34,7 +35,9 @@ export default {
     },
   },
   data() {
-		return {}
+		return {
+			ContentType: ContentType
+		}
 	},
 }
 </script>
