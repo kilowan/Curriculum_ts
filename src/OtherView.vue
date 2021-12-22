@@ -24,6 +24,10 @@ export default {
       type: Array,
       required: true
     },
+    token: {
+      type: String,
+      required: true
+    },
   },
   components: {
 

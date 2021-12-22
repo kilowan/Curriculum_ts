@@ -3,7 +3,7 @@
 		<strong>Contenido:</strong>
 		<ul>
 			<li v-for="(content, i) in contents" v-bind:key="i">
-        <content-view :content="content" :type="type" />
+        <content-view :content="content" :type="type" :token="token" @refresh="$emit('refresh')"/>
 			</li>
 		</ul>
 	</div>
@@ -24,6 +24,10 @@ export default {
       required: true
     },
     type: {
+      type: String,
+      required: true
+    },
+    token: {
       type: String,
       required: true
     },

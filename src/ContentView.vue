@@ -2,7 +2,7 @@
 	<div>	
       <div v-if="edit">
         <input class="m-2" type="text" v-model="contentData.name" />
-        <b-button class="m-2" @click="edit = false">Guardar</b-button>
+        <b-button class="m-2" @click="save">Guardar</b-button>
         <b-button class="m-2" @click="cancel">Cancelar</b-button>
       </div>
       <div v-else @click="edit = true">
@@ -27,6 +27,7 @@
 
 
 <script lang="ts">
+import axios from 'axios';
 
 export default {
   name: 'ContentView',
@@ -36,6 +37,10 @@ export default {
       required: true
     },
     type: {
+      type: String,
+      required: true
+    },
+    token: {
       type: String,
       required: true
     },
@@ -50,6 +55,17 @@ export default {
     cancel(){
       this.contentData = this.content;
       this.edit = false;
+    },
+    async save(){
+			await axios({
+				method: 'put',
+				headers: { Authorization: `Bearer ${this.token}` },
+				url: `http://localhost:8080/api/Content/${this.content.id}/${this.content.name}`,
+			}).then((data: any) =>{
+        debugger;
+        this.edit = false;
+				this.$emit('refresh');
+			});
     },
   },
   mounted(){

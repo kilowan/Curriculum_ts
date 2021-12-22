@@ -9,7 +9,7 @@
 						<li>Centro/ Lugar: {{academic.place}}</li>
 						<li v-if="academic.graduationDate">Graduación: {{new Date(academic.graduationDate).getFullYear()}}</li>
 						<li v-if="academic.contents.length >0">
-							<contents-view :contents="academic.contents" :type="ContentType.academic" />
+							<contents-view :contents="academic.contents" :type="ContentType.academic" :token="token" @refresh="$emit('refresh')"/>
 						</li>
 					</ul>
 				</li>
@@ -31,6 +31,10 @@ export default {
   props:{
     academicTraining: {
       type: Array,
+      required: true
+    },
+    token: {
+      type: String,
       required: true
     },
   },
