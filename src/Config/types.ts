@@ -50,6 +50,7 @@ export interface CurriculumDetail extends ObjectConstructor{
     contents: Array<Content>;
   }
   export interface Content extends ObjectConstructor {
+    id: number;
     name: string;
     edit: boolean;
     subContents: Array<SubContent>;

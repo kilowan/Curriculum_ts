@@ -7,7 +7,7 @@
 					<strong>{{otherTrainingData.name}}</strong>
 					<ul>
 						<li>
-							<contents-view :type="ContentType.complementary" :contents="otherTrainingData.contents" />
+							<contents-view :type="ContentType.complementary" :contents="otherTrainingData.contents" :token="token" @refresh="$emit('refresh')"/>
 						</li>
 					</ul>
 				</li>
@@ -29,6 +29,10 @@ export default {
   props:{
     otherTraining: {
       type: Array,
+      required: true
+    },
+    token: {
+      type: String,
       required: true
     },
   },

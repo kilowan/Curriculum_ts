@@ -27,21 +27,13 @@ export default {
 		}
 	},
 	methods:{
-		async getCurriculum(id: number){
-			await axios({
-				method: 'get',
-				headers: { Authorization: `Bearer ${this.token}` },
-				url: `http://localhost:8080/api/Curriculum/${id}`,
-			})
-			.then((data: any) => {
-				this.$router.push({
-					name: 'CurriculumView', 
-					params: {
-						curriculum: data.data,
-						curriculumId: id.toString(),
-						token: this.token,
-					}
-				});
+		getCurriculum(id: number){
+			this.$router.push({
+				name: 'CurriculumView', 
+				params: {
+					curriculumId: id.toString(),
+					token: this.token,
+				}
 			});
 		}
 	},

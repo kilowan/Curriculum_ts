@@ -13,15 +13,15 @@
 		</div>		
 		<div class="clear"></div>		
 		<dl>
-			<professional-experience-view v-if="data.experience.length > 0" :experience="data.experience" />
+			<professional-experience-view v-if="data.experience.length > 0"  :token="token" :experience="data.experience" />
 			<dd class="clear"></dd>
-			<academic-training-view v-if="data.academicTraining.length > 0" :academicTraining="data.academicTraining" />
+			<academic-training-view v-if="data.academicTraining.length > 0" :token="token"  :academicTraining="data.academicTraining" @refresh="getCurriculum(curriculumId)" />
 			<dd class="clear"></dd>
-			<complementary-experience-view v-if="data.otherTraining.length > 0" :otherTraining="data.otherTraining" />
+			<complementary-experience-view v-if="data.otherTraining.length > 0" :token="token"  :otherTraining="data.otherTraining" @refresh="getCurriculum(curriculumId)" />
 			<dd class="clear"></dd>
-			<language-list v-if="data.languageList.length > 0" :languageList="data.languageList" />			
+			<language-list v-if="data.languageList.length > 0" :token="token" :languageList="data.languageList" />			
 			<dd class="clear"></dd>
-			<other v-if="data.otherData" :other="data.otherData" />
+			<other v-if="data.otherData"  :token="token"  :other="data.otherData" />
 			<dd class="clear"></dd>
 		</dl>
 		<dd class="clear"></dd>
@@ -35,6 +35,7 @@ import  Other from './OtherView.vue';
 import ProfessionalExperienceView from './ProfessionalExperienceView.vue';
 import ComplementaryExperienceView from './ComplementaryExperienceView.vue';
 import LanguageList from './LanguagesView.vue';
+import axios from 'axios';
 
 export default {
   name: 'CurriculumView',
@@ -59,6 +60,7 @@ export default {
 			academic: Object,
 			otherData: Object,
 			token: '',
+			curriculumId: '',
 		}
 	},
 	watch: {
@@ -89,6 +91,16 @@ export default {
 		}
 	},
   methods: {
+	async getCurriculum(id: any){
+		await axios({
+			method: 'get',
+			headers: { Authorization: `Bearer ${this.token}` },
+			url: `http://localhost:8080/api/Curriculum/${id}`,
+		})
+		.then((data: any) => {
+			this.data = data.data;
+		});
+	}
 	/*save: function() {
 		const data = JSON.stringify(this.inputData)
 		const blob = new Blob([data], {type: 'text/plain'})
@@ -102,9 +114,11 @@ export default {
 	},*/
   },
   async mounted() {
-	  	if(this.$route.params.curriculum) {
-			this.data = this.$route.params.curriculum;
+	  debugger;
+	  	if(this.$route.params.token) {
+			this.curriculumId = this.$route.params.curriculumId;
 			this.token = this.$route.params.token;
+			this.data = this.getCurriculum(this.$route.params.curriculumId);
 		}
   	}
 }
