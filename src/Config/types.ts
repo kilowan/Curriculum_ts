@@ -41,6 +41,7 @@ export interface CurriculumDetail extends ObjectConstructor{
     descriptionList: Array<string>;
   }
   export interface Training extends ObjectConstructor {
+    id: number;
     name: string;
     type: number;
     place: string;
