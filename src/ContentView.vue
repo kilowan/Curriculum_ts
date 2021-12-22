@@ -1,26 +1,38 @@
 <template>
 	<div>	
-		<strong>Contenido:</strong>
-		<ul>
-			<li v-for="(content, i) in contents" v-bind:key="i">
-        <content-view :content="content" :type="type" />
-			</li>
-		</ul>
+      <div v-if="edit">
+        <input class="m-2" type="text" v-model="contentData.name" />
+        <b-button class="m-2" @click="edit = false">Guardar</b-button>
+        <b-button class="m-2" @click="cancel">Cancelar</b-button>
+      </div>
+      <div v-else @click="edit = true">
+        {{ contentData.name }}
+      </div>
+      <ul>
+        <li v-for="(subcontent, thirdindex) in content.subContents" v-bind:key="thirdindex">{{subcontent}}</li>
+      </ul>
+		<!--<b-modal 
+			id="edit-content" 
+			title="Editar Contenido"
+      hide-footer
+		>
+			<div style="text-align: center; margin: 0 auto; width:380px;">
+        <input class="m-2" type="text" v-model="contentData.name" />
+        <b-button class="m-2" @click="edit = false">Guardar</b-button>
+        <b-button class="m-2" @click="cancel">Cancelar</b-button>
+			</div>
+		</b-modal>-->
 	</div>
 </template>
 
 
 <script lang="ts">
-import ContentView from './ContentView.vue'
 
 export default {
-  name: 'ContentsView',
-  components:{
-    ContentView
-  },
+  name: 'ContentView',
   props:{
-    contents: {
-      type: Array,
+    content: {
+      type: Object,
       required: true
     },
     type: {
@@ -29,8 +41,20 @@ export default {
     },
   },
   data() {
-		return {}
+		return {
+      edit: false,
+      contentData: {},
+    }
 	},
+  methods:{
+    cancel(){
+      this.contentData = this.content;
+      this.edit = false;
+    },
+  },
+  mounted(){
+    this.contentData = this.content;
+  }
 }
 </script>
 
