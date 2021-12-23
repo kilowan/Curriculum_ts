@@ -48,7 +48,10 @@ export default {
   data() {
 		return {
       edit: false,
-      contentData: {},
+      contentData: {
+        id: Number.prototype,
+        name: String.prototype
+      },
     }
 	},
   methods:{
@@ -57,19 +60,23 @@ export default {
       this.edit = false;
     },
     async save(){
-			await axios({
-				method: 'put',
-				headers: { Authorization: `Bearer ${this.token}` },
-				url: `http://localhost:8080/api/Content/${this.content.id}/${this.content.name}`,
-			}).then((data: any) =>{
-        debugger;
-        this.edit = false;
-				this.$emit('refresh');
-			});
+      if (this.contentData.name !== '') {
+        await axios({
+          method: 'put',
+          headers: { Authorization: `Bearer ${this.token}` },
+          url: `http://localhost:8080/api/Content/${this.contentData.id}/${this.contentData.name}`,
+        }).then((data: any) =>{
+          this.edit = false;
+          this.$emit('refresh');
+        });
+      }
     },
   },
   mounted(){
-    this.contentData = this.content;
+    this.contentData = {
+      id: this.content.id,
+      name: this.content.name
+    };
   }
 }
 </script>

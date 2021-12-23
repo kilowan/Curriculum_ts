@@ -7,7 +7,7 @@
 					<strong>{{otherTrainingData.name}}</strong>
 					<ul>
 						<li>
-							<contents-view :type="ContentType.complementary" :contents="otherTrainingData.contents" :token="token" @refresh="$emit('refresh')"/>
+							<contents-view :type="ContentType.complementary" :contents="otherTrainingData.contents" :token="token" :trainingId="otherTrainingData.id" @refresh="$emit('refresh')"/>
 						</li>
 					</ul>
 				</li>
