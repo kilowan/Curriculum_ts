@@ -2,18 +2,23 @@
 	<div>
       <div>
         {{ contentData.name }} 
-        <b-link @click="$bvModal.show(`edit-content-${contentData.id}`)">
+        <b-link v-if="editMode" @click="$bvModal.show(`edit-content-${contentData.id}`)">
           <b-icon icon="pencil-square" aria-hidden="true"/>
         </b-link>
-      <b-link v-if="content.subContents.length === 0" @click="$bvModal.show(`add-subcontent-${contentData.id}`)">
+      <b-link v-if="content.subContents.length === 0 && editMode" @click="$bvModal.show(`add-subcontents-${contentData.id}`)">
         <b-icon icon="plus-circle-fill" aria-hidden="true"/>
       </b-link>
-      <b-link v-if="content.subContents.length === 0" @click="$bvModal.show(`delete-content-${contentData.id}`)">
+      <b-link v-if="content.subContents.length === 0 && editMode" @click="$bvModal.show(`delete-content-${contentData.id}`)">
         <b-icon icon="x-circle-fill" aria-hidden="true"/>
       </b-link>
       </div>
       <ul>
-        <li v-for="(subcontent, thirdindex) in content.subContents" v-bind:key="thirdindex">{{subcontent}}</li>
+        <li v-for="(subcontent, thirdindex) in content.subContents" v-bind:key="thirdindex">
+          <sub-content :editMode="editMode" :token="token" :subContent="subcontent" :type="type" @refresh="$emit('refresh')"/>
+        </li>
+        <b-link v-if="editMode" @click="$bvModal.show(`add-subcontent-${contentData.id}`)">
+          <b-icon icon="plus-circle-fill" aria-hidden="true"/>Añadir SubContenido
+        </b-link>
       </ul>
     <b-modal 
 			:id="`delete-content-${contentData.id}`" 
@@ -43,6 +48,19 @@
       @ok="AddSubContent"
 		>
 			<div style="text-align: center; margin: 0 auto; width:380px;">
+        <input class="m-2" type="text" placeholder="Nuevo subcontenido" v-model="subcontent" />
+        <b-link @click="addOne(subcontent)">
+          <b-icon icon="plus-circle-fill" aria-hidden="true"/>
+        </b-link>
+			</div>
+		</b-modal>
+		<b-modal 
+			:id="`add-subcontents-${contentData.id}`" 
+			title="Añadir SubContenido"
+      ok-title="Guardar"
+      @ok="AddSubContent"
+		>
+			<div style="text-align: center; margin: 0 auto; width:380px;">
         <ul>
           <li v-for="(subcontent, i) in subContents" v-bind:key="i">{{subcontent}}</li>
         </ul>
@@ -58,10 +76,13 @@
 
 <script lang="ts">
 import axios from 'axios';
-//import { SubContent } from './Config/types';
+import  SubContent  from './SubContentView.vue';
 
 export default {
   name: 'ContentView',
+  components:{
+    SubContent
+  },
   props:{
     content: {
       type: Object,
@@ -75,6 +96,10 @@ export default {
       type: String,
       required: true
     },
+    editMode: {
+      type: Boolean,
+      required: true,
+    }
   },
   data() {
 		return {
@@ -92,9 +117,13 @@ export default {
       this.subContents.push(subContent);
       this.subcontent = '';
     },
+    addOne(subContent: string) {
+      this.subContents.push(subContent);
+      this.subcontent = '';
+      this.AddSubContent();
+    },
     async AddSubContent(){
       if (this.subContents.length > 0) {
-        debugger;
         await axios({
           method: 'post',
           headers: { Authorization: `Bearer ${this.token}` },
@@ -104,7 +133,6 @@ export default {
             contentId: this.content.id
           }
         }).then((data: any) =>{
-          debugger;
           this.subContents = [];
           this.$emit('refresh');
         });
@@ -115,7 +143,6 @@ export default {
       this.edit = false;
     },
     async deleteContent(){
-      debugger;
       if (this.contentData.id) {
         await axios({
           method: 'delete',
