@@ -1,27 +1,41 @@
 <template>
-	<div>	
-      <div v-if="edit">
-        <input class="m-2" type="text" v-model="contentData.name" />
-        <b-button class="m-2" @click="save">Guardar</b-button>
-        <b-button class="m-2" @click="cancel">Cancelar</b-button>
-      </div>
-      <div v-else @click="edit = true">
-        {{ contentData.name }}
+	<div>
+      <div>
+        {{ contentData.name }} 
+        <b-link @click="$bvModal.show(`edit-content-${contentData.id}`)">
+          <b-icon icon="pencil-square" aria-hidden="true"/>
+        </b-link>
+      <b-link v-if="content.subContents.length === 0" @click="add = true">
+        <b-icon icon="plus-circle-fill" aria-hidden="true"/>
+      </b-link>
+      <b-link v-if="content.subContents.length === 0" @click="$bvModal.show(`delete-content-${contentData.id}`)">
+        <b-icon icon="x-circle-fill" aria-hidden="true"/>
+      </b-link>
       </div>
       <ul>
         <li v-for="(subcontent, thirdindex) in content.subContents" v-bind:key="thirdindex">{{subcontent}}</li>
       </ul>
-		<!--<b-modal 
-			id="edit-content" 
+    <b-modal 
+			:id="`delete-content-${contentData.id}`" 
+			title="Eliminar Contenido"
+      ok-title="Eliminar"
+      @ok="deleteContent"
+		>
+      <div style="text-align: center; margin: 0 auto; width:380px;">
+        <h1>¿Seguro que quieres eliminar el elemento '{{ contentData.name }}'?</h1>
+			</div>
+		</b-modal>
+		<b-modal 
+			:id="`edit-content-${contentData.id}`" 
 			title="Editar Contenido"
-      hide-footer
+      ok-title="Guardar"
+      @ok="save"
+      @cancel="cancel"
 		>
 			<div style="text-align: center; margin: 0 auto; width:380px;">
         <input class="m-2" type="text" v-model="contentData.name" />
-        <b-button class="m-2" @click="edit = false">Guardar</b-button>
-        <b-button class="m-2" @click="cancel">Cancelar</b-button>
 			</div>
-		</b-modal>-->
+		</b-modal>
 	</div>
 </template>
 
@@ -58,6 +72,18 @@ export default {
     cancel(){
       this.contentData = this.content;
       this.edit = false;
+    },
+    async deleteContent(){
+      debugger;
+      if (this.contentData.id) {
+        await axios({
+          method: 'delete',
+          headers: { Authorization: `Bearer ${this.token}` },
+          url: `http://localhost:8080/api/Content/${this.contentData.id}`,
+        }).then((data: any) =>{
+          this.$emit('refresh');
+        });
+      }
     },
     async save(){
       if (this.contentData.name !== '') {

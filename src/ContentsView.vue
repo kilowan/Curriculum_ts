@@ -11,7 +11,7 @@
         <b-button class="m-2" @click="cancel">Cancelar</b-button>
       </div>
       <b-link @click="add = true">
-        <b-icon icon="plus-circle-fill" aria-hidden="true"></b-icon>
+        <b-icon icon="plus-circle-fill" aria-hidden="true"/> Añadir contenido
       </b-link>
 		</ul>
 	</div>
