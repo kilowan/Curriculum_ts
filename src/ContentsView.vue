@@ -5,6 +5,14 @@
 			<li v-for="(content, i) in contents" v-bind:key="i">
         <content-view :content="content" :type="type" :token="token" @refresh="$emit('refresh')"/>
 			</li>
+      <div v-if="add">
+        <input class="m-2" type="text" v-model="element" />
+        <b-button class="m-2" @click="save">Guardar</b-button>
+        <b-button class="m-2" @click="cancel">Cancelar</b-button>
+      </div>
+      <b-link @click="add = true">
+        <b-icon icon="plus-circle-fill" aria-hidden="true"></b-icon>
+      </b-link>
 		</ul>
 	</div>
 </template>
@@ -12,6 +20,7 @@
 
 <script lang="ts">
 import ContentView from './ContentView.vue'
+import axios from 'axios';
 
 export default {
   name: 'ContentsView',
@@ -27,14 +36,44 @@ export default {
       type: String,
       required: true
     },
+    trainingId: {
+      type: Number,
+      required: true
+    },
     token: {
       type: String,
       required: true
     },
   },
   data() {
-		return {}
+		return {
+      add: false,
+      element: '',
+    }
 	},
+  methods: {
+    cancel(){
+      this.element = '';
+      this.add = false;
+    },
+    async save(){
+      if (this.element !== '') {
+        await axios({
+          method: 'post',
+          headers: { Authorization: `Bearer ${this.token}` },
+          url: `http://localhost:8080/api/Content`,
+          data: {
+            name: this.element,
+            trainingId: this.trainingId,
+          }
+        }).then((data: any) =>{
+          this.element = '';
+          this.add = false;
+          this.$emit('refresh');
+        });
+      }
+    }
+  }
 }
 </script>
 
