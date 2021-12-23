@@ -58,7 +58,7 @@ export interface CurriculumDetail extends ObjectConstructor{
   }
   export interface SubContent extends ObjectConstructor {
     name: string;
-    subContents: Array<string>;
+    id: number;
   }
   export interface Language extends ObjectConstructor {
     name: string;

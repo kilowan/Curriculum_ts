@@ -1,16 +1,20 @@
 <template>
 	<div>	
-		<strong>Contenido:</strong>
+		<strong class="m-2">Contenido:</strong>
+    <b-link class="m-2" @click="editMode = !editMode">
+      <b-icon v-if="!editMode" icon="toggle-off" aria-hidden="true"/>
+      <b-icon v-if="editMode" icon="toggle-on" aria-hidden="true"/>
+    </b-link>
 		<ul>
 			<li v-for="(content, i) in contents" v-bind:key="i">
-        <content-view :content="content" :type="type" :token="token" @refresh="$emit('refresh')"/>
+        <content-view :editMode="editMode" :content="content" :type="type" :token="token" @refresh="$emit('refresh')"/>
 			</li>
       <div v-if="add">
         <input class="m-2" type="text" v-model="element" />
         <b-button class="m-2" @click="save">Guardar</b-button>
         <b-button class="m-2" @click="cancel">Cancelar</b-button>
       </div>
-      <b-link @click="add = true">
+      <b-link v-if="editMode" @click="add = true">
         <b-icon icon="plus-circle-fill" aria-hidden="true"/> Añadir contenido
       </b-link>
 		</ul>
@@ -49,6 +53,7 @@ export default {
 		return {
       add: false,
       element: '',
+      editMode: false,
     }
 	},
   methods: {
