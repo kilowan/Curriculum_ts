@@ -90,3 +90,8 @@ export interface CurriculumDetail extends ObjectConstructor{
     Academic,
     Complementary,
   }
+  export enum SocialMediaType {
+    Linkedin = 1,
+    Infojobs = 2,
+    GitHub = 3,
+  }
