@@ -5,7 +5,7 @@
         <b-link @click="$bvModal.show(`edit-content-${contentData.id}`)">
           <b-icon icon="pencil-square" aria-hidden="true"/>
         </b-link>
-      <b-link v-if="content.subContents.length === 0" @click="add = true">
+      <b-link v-if="content.subContents.length === 0" @click="$bvModal.show(`add-subcontent-${contentData.id}`)">
         <b-icon icon="plus-circle-fill" aria-hidden="true"/>
       </b-link>
       <b-link v-if="content.subContents.length === 0" @click="$bvModal.show(`delete-content-${contentData.id}`)">
@@ -36,12 +36,29 @@
         <input class="m-2" type="text" v-model="contentData.name" />
 			</div>
 		</b-modal>
+		<b-modal 
+			:id="`add-subcontent-${contentData.id}`" 
+			title="Añadir SubContenido"
+      ok-title="Guardar"
+      @ok="AddSubContent"
+		>
+			<div style="text-align: center; margin: 0 auto; width:380px;">
+        <ul>
+          <li v-for="(subcontent, i) in subContents" v-bind:key="i">{{subcontent}}</li>
+        </ul>
+        <input class="m-2" type="text" placeholder="Nuevo subcontenido" v-model="subcontent" />
+        <b-link @click="add(subcontent)">
+          <b-icon icon="plus-circle-fill" aria-hidden="true"/>
+        </b-link>
+			</div>
+		</b-modal>
 	</div>
 </template>
 
 
 <script lang="ts">
 import axios from 'axios';
+//import { SubContent } from './Config/types';
 
 export default {
   name: 'ContentView',
@@ -64,11 +81,35 @@ export default {
       edit: false,
       contentData: {
         id: Number.prototype,
-        name: String.prototype
+        name: String.prototype,
       },
+      subcontent: String.prototype,
+      subContents: new Array<string>(),
     }
 	},
   methods:{
+    add(subContent: string){
+      this.subContents.push(subContent);
+      this.subcontent = '';
+    },
+    async AddSubContent(){
+      if (this.subContents.length > 0) {
+        debugger;
+        await axios({
+          method: 'post',
+          headers: { Authorization: `Bearer ${this.token}` },
+          url: `http://localhost:8080/api/SubContent`,
+          data:{
+            subContents: this.subContents,
+            contentId: this.content.id
+          }
+        }).then((data: any) =>{
+          debugger;
+          this.subContents = [];
+          this.$emit('refresh');
+        });
+      }
+    },
     cancel(){
       this.contentData = this.content;
       this.edit = false;
