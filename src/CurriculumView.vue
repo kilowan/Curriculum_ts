@@ -2,11 +2,14 @@
 	<div id="page-wrap">			
 		<div id="contact-info" class="vcard">
 			<h1 class="fn">{{ data.fullName }}</h1>
-			<p v-if="data.phoneNumber">
-				Teléfono: <span class="tel">{{ data.phoneNumber.number }}</span><br />
-				Email: <a class="email" :href="'mailto:'+ data.email.fullEmail">{{ data.email.fullEmail }}</a><br />
-				Linkedin: <a class="link" :href="'https://www.' + data.socialMedia[0].name">{{ data.socialMedia[0].name }}</a>
-			</p>
+			<div v-if="data.phoneNumber">
+				<b-icon icon="telephone-fill" aria-hidden="true"/> <span>{{ data.phoneNumber.number }}</span><br />
+				<b-icon icon="envelope" aria-hidden="true"/> <a :href="'mailto:'+ data.email.fullEmail">{{ data.email.fullEmail }}</a><br />
+			</div>
+			<div v-for="(socialMedia, index) in data.socialMedia" v-bind:key="index">
+				<b-icon v-if="socialMedia.type === SocialMediaType.Linkedin" icon="linkedin" aria-hidden="true"/> <a v-if="socialMedia.type === SocialMediaType.Linkedin" :href="'https://www.' + socialMedia.name">{{ socialMedia.name }}</a>
+				<b-icon v-if="socialMedia.type === SocialMediaType.GitHub" icon="github" aria-hidden="true"/> <a v-if="socialMedia.type === SocialMediaType.GitHub" :href="socialMedia.name">{{ socialMedia.name }}</a>
+			</div>
 		</div>					
 		<div id="objective">
 			<p>{{ data.description }}</p>
@@ -36,6 +39,7 @@ import ProfessionalExperienceView from './ProfessionalExperienceView.vue';
 import ComplementaryExperienceView from './ComplementaryExperienceView.vue';
 import LanguageList from './LanguagesView.vue';
 import axios from 'axios';
+import { SocialMediaType } from './Config/types';
 
 export default {
   name: 'CurriculumView',
@@ -61,6 +65,7 @@ export default {
 			otherData: Object,
 			token: '',
 			curriculumId: '',
+			SocialMediaType: SocialMediaType
 		}
 	},
 	watch: {
