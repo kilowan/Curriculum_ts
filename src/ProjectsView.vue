@@ -2,12 +2,13 @@
 	<ul>
 		<li>
 			Proyectos:
-			<ul>
+			<b-link @click="contract = !contract">
+				<b-icon v-if="contract" icon="chevron-up"/>
+				<b-icon v-if="!contract" icon="chevron-down"/>
+			</b-link>
+			<ul v-if="contract">
 				<li v-for="(project, thirdindex) in projects" v-bind:key="thirdindex">
-					{{project.name}}
-					<ul>
-						<li v-for="(description, fourthindex) in project.descriptionList" v-bind:key="fourthindex">{{description}}</li>
-					</ul>
+					<project-view :project="project" />
 				</li>
 			</ul>
 		</li>
@@ -16,9 +17,13 @@
 
 
 <script lang="ts">
+import ProjectView from './ProjectView.vue';
 
 export default {
   name: 'ProjectsView',
+  components:{
+	  ProjectView,
+  },
   props:{
     projects: {
       type: Array,
@@ -26,7 +31,10 @@ export default {
     },
   },
   data() {
-		return {}
+		return {
+			contract: false,
+			contracted: false
+		}
 	},
 }
 </script>

@@ -9,6 +9,7 @@
 			<div v-for="(socialMedia, index) in data.socialMedia" v-bind:key="index">
 				<b-icon v-if="socialMedia.type === SocialMediaType.Linkedin" icon="linkedin" aria-hidden="true"/> <a v-if="socialMedia.type === SocialMediaType.Linkedin" :href="'https://www.' + socialMedia.name">{{ socialMedia.name }}</a>
 				<b-icon v-if="socialMedia.type === SocialMediaType.GitHub" icon="github" aria-hidden="true"/> <a v-if="socialMedia.type === SocialMediaType.GitHub" :href="socialMedia.name">{{ socialMedia.name }}</a>
+				<b-icon v-if="socialMedia.type === SocialMediaType.Infojobs" icon="link" aria-hidden="true"/> <a v-if="socialMedia.type === SocialMediaType.Infojobs" :href="socialMedia.name">{{ socialMedia.name }}</a>
 			</div>
 		</div>					
 		<div id="objective">

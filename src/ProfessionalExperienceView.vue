@@ -5,7 +5,11 @@
 			<ul>
 				<li v-for="(company, firstindex) in experience" v-bind:key="firstindex">
 					{{company.name}}
-					<ul>
+					<b-link @click="contract = !contract">
+					<b-icon v-if="contract" icon="chevron-up"/>
+					<b-icon v-if="!contract" icon="chevron-down"/>
+					</b-link>
+					<ul v-if="contract">
 						<li>Centro/Lugar: {{company.place}}</li>
 						<li>Fecha inicio: {{new Date(company.initDate).toLocaleDateString()}}</li>
 						<li>Fecha Fin: {{new Date(company.finishDate).toLocaleDateString()}}</li>
@@ -38,7 +42,9 @@ export default {
     },
   },
   data() {
-		return {}
+		return {
+			contract: false
+		}
 	},
 }
 </script>
