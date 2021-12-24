@@ -15,7 +15,7 @@
 		<div id="objective">
 			<p>{{ data.description }}</p>
 		</div>		
-		<div class="clear"></div>		
+		<div class="clear">{{EditMode('')}}</div>	
 		<dl>
 			<professional-experience-view v-if="data.experience.length > 0"  :token="token" :experience="data.experience" @contract="EditMode" />
 			<dd class="clear"></dd>
@@ -25,7 +25,7 @@
 			<dd class="clear"></dd>
 			<language-list v-if="data.languageList.length > 0" :token="token" :languageList="data.languageList" />			
 			<dd class="clear"></dd>
-			<other v-if="data.otherData"  :token="token"  :other="data.otherData" />
+			<other v-if="data.otherData"  :token="token"  :other="data.otherData" @load="EditMode('mounted')"/>
 			<dd class="clear"></dd>
 		</dl>
 		<dd class="clear"></dd>
@@ -66,13 +66,14 @@ export default {
 		}
 	},
   methods: {
-	EditMode(){
+	EditMode(data:string){
         this.$nextTick(() => {
 			this.exp();
 			this.comp();
 			this.academic();
 			this.lang();
 			this.other();
+			return data;
         });
 	},
 	exp: function () {
@@ -128,9 +129,6 @@ export default {
 			this.token = this.$route.params.token;
 			this.data = this.getCurriculum(this.$route.params.curriculumId);
 		}
-        this.$nextTick(() => {
-			this.EditMode();
-        });
   	}
 }
 </script>
