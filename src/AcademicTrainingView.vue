@@ -9,7 +9,7 @@
 						<li>Centro/ Lugar: {{academic.place}}</li>
 						<li v-if="academic.graduationDate">Graduación: {{new Date(academic.graduationDate).getFullYear()}}</li>
 						<li v-if="academic.contents.length >0">
-							<contents-view :contents="academic.contents" :type="ContentType.academic" :token="token" :trainingId="academic.id" @refresh="$emit('refresh')"/>
+							<contents-view :contents="academic.contents" :type="ContentType.academic" :token="token" :trainingId="academic.id" @editMode="$emit('editMode')" @refresh="$emit('refresh')"/>
 						</li>
 					</ul>
 				</li>

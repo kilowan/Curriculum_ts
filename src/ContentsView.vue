@@ -1,13 +1,13 @@
 <template>
 	<div>	
 		<strong class="m-2">Contenido:</strong>
-    <b-link class="m-2" @click="editMode = !editMode">
+    <b-link class="m-2" @click="editMode = !editMode, $emit('editMode')">
       <b-icon v-if="!editMode" icon="toggle-off" aria-hidden="true"/>
       <b-icon v-if="editMode" icon="toggle-on" aria-hidden="true"/>
     </b-link>
 		<ul>
 			<li v-for="(content, i) in contents" v-bind:key="i">
-        <content-view :editMode="editMode" :content="content" :type="type" :token="token" @refresh="$emit('refresh')"/>
+        <content-view :editMode="editMode" :content="content" :type="type" :token="token" @editMode="$emit('editMode')" @refresh="$emit('refresh')"/>
 			</li>
       <div v-if="add">
         <input class="m-2" type="text" v-model="element" />

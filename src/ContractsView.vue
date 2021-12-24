@@ -1,18 +1,18 @@
 <template>
 	<li>
 		Contratos: 
-    <b-link @click="contract = !contract">
+    <b-link @click="contract = !contract, $emit('contract')">
       <b-icon v-if="contract" icon="chevron-up"/>
       <b-icon v-if="!contract" icon="chevron-down"/>
     </b-link>
 		<ul v-if="contract">
 			<li v-for="(contract, secondindex) in contracts" v-bind:key="secondindex">
 				{{contract.name}}
-        <b-link @click="contracted = !contracted">
+        <b-link @click="contracted = !contracted, $emit('contract')">
           <b-icon v-if="contracted" icon="chevron-up"/>
           <b-icon v-if="!contracted" icon="chevron-down"/>
         </b-link>
-				<projects v-if="contracted" :projects="contract.projects" />
+				<projects v-if="contracted" :projects="contract.projects" @contract="$emit('contract')" />
 			</li>
 		</ul>
 	</li>
