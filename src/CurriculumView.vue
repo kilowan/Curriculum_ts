@@ -17,11 +17,11 @@
 		</div>		
 		<div class="clear"></div>		
 		<dl>
-			<professional-experience-view v-if="data.experience.length > 0"  :token="token" :experience="data.experience" />
+			<professional-experience-view v-if="data.experience.length > 0"  :token="token" :experience="data.experience" @contract="EditMode" />
 			<dd class="clear"></dd>
-			<academic-training-view v-if="data.academicTraining.length > 0" :token="token"  :academicTraining="data.academicTraining" @refresh="getCurriculum(curriculumId)" />
+			<academic-training-view v-if="data.academicTraining.length > 0" :token="token"  :academicTraining="data.academicTraining" @editMode="EditMode" @refresh="getCurriculum(curriculumId)" />
 			<dd class="clear"></dd>
-			<complementary-experience-view v-if="data.otherTraining.length > 0" :token="token"  :otherTraining="data.otherTraining" @refresh="getCurriculum(curriculumId)" />
+			<complementary-experience-view v-if="data.otherTraining.length > 0" :token="token"  :otherTraining="data.otherTraining" @editMode="EditMode" @refresh="getCurriculum(curriculumId)" />
 			<dd class="clear"></dd>
 			<language-list v-if="data.languageList.length > 0" :token="token" :languageList="data.languageList" />			
 			<dd class="clear"></dd>
@@ -60,43 +60,46 @@ export default {
 			add: false,
 			message: '',
 			data: {},
-			experience: Object,
-			other: Object,
-			academic: Object,
-			otherData: Object,
 			token: '',
 			curriculumId: '',
 			SocialMediaType: SocialMediaType
 		}
 	},
-	watch: {
-		exp: function () {
-			let experiencia: HTMLElement|null = document.querySelector('#experiencia');
-			let experience: HTMLElement|null = document.querySelector('#experience');
-			if(experiencia && experience) experiencia.style.height = experience.clientHeight + 'px';
-		},
-		comp: function () {
-			let complementaria: HTMLElement|null = document.querySelector('#complementaria');
-			let complementary: HTMLElement|null = document.querySelector('#complementary');
-			if(complementaria && complementary) complementaria.style.height = complementary.clientHeight + 'px';
-		},
-		academic: function () {
-			let academica: HTMLElement|null = document.querySelector('#academica');
-			let academic: HTMLElement|null = document.querySelector('#academic');
-			if(academica && academic) academica.style.height = academic.clientHeight + 'px';
-		},
-		lang: function () {
-			let idiomas: HTMLElement|null = document.querySelector('#idiomas');
-			let languages: HTMLElement|null = document.querySelector('#languages');
-			if(idiomas && languages) idiomas.style.height = languages.clientHeight + 'px';
-		},
-		other: function () {
-			let otros: HTMLElement|null = document.querySelector('#otros');
-			let other: HTMLElement|null = document.querySelector('#other');
-			if(otros && other) otros.style.height = other.clientHeight + 'px';
-		}
-	},
   methods: {
+	EditMode(){
+        this.$nextTick(() => {
+			this.exp();
+			this.comp();
+			this.academic();
+			this.lang();
+			this.other();
+        });
+	},
+	exp: function () {
+		let experiencia: HTMLElement|null = document.querySelector('#experiencia');
+		let experience: HTMLElement|null = document.querySelector('#experience');
+		if(experiencia && experience) experiencia.style.height = experience.clientHeight + 'px';
+	},
+	comp: function () {
+		let complementaria: HTMLElement|null = document.querySelector('#complementaria');
+		let complementary: HTMLElement|null = document.querySelector('#complementary');
+		if(complementaria && complementary) complementaria.style.height = complementary.clientHeight + 'px';
+	},
+	academic: function () {
+		let academica: HTMLElement|null = document.querySelector('#academica');
+		let academic: HTMLElement|null = document.querySelector('#academic');
+		if(academica && academic) academica.style.height = academic.clientHeight + 'px';
+	},
+	lang: function () {
+		let idiomas: HTMLElement|null = document.querySelector('#idiomas');
+		let languages: HTMLElement|null = document.querySelector('#languages');
+		if(idiomas && languages) idiomas.style.height = languages.clientHeight + 'px';
+	},
+	other: function () {
+		let otros: HTMLElement|null = document.querySelector('#otros');
+		let other: HTMLElement|null = document.querySelector('#other');
+		if(otros && other) otros.style.height = other.clientHeight + 'px';
+	},
 	async getCurriculum(id: any){
 		await axios({
 			method: 'get',
@@ -120,12 +123,14 @@ export default {
 	},*/
   },
   async mounted() {
-	  debugger;
 	  	if(this.$route.params.token) {
 			this.curriculumId = this.$route.params.curriculumId;
 			this.token = this.$route.params.token;
 			this.data = this.getCurriculum(this.$route.params.curriculumId);
 		}
+        this.$nextTick(() => {
+			this.EditMode();
+        });
   	}
 }
 </script>

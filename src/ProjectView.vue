@@ -1,7 +1,7 @@
 <template>
 <div>
 	{{project.name}}
-	<b-link @click="contract = !contract">
+	<b-link @click="contract = !contract, $emit('contract')">
 		<b-icon v-if="contract" icon="chevron-up"/>
 		<b-icon v-if="!contract" icon="chevron-down"/>
 	</b-link>

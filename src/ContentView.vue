@@ -45,13 +45,10 @@
 			:id="`add-subcontent-${contentData.id}`" 
 			title="Añadir SubContenido"
       ok-title="Guardar"
-      @ok="AddSubContent"
+      @ok="addOne(subcontent)"
 		>
 			<div style="text-align: center; margin: 0 auto; width:380px;">
         <input class="m-2" type="text" placeholder="Nuevo subcontenido" v-model="subcontent" />
-        <b-link @click="addOne(subcontent)">
-          <b-icon icon="plus-circle-fill" aria-hidden="true"/>
-        </b-link>
 			</div>
 		</b-modal>
 		<b-modal 

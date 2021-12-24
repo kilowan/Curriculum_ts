@@ -2,13 +2,13 @@
 	<ul>
 		<li>
 			Proyectos:
-			<b-link @click="contract = !contract">
+			<b-link @click="contract = !contract, $emit('contract')">
 				<b-icon v-if="contract" icon="chevron-up"/>
 				<b-icon v-if="!contract" icon="chevron-down"/>
 			</b-link>
 			<ul v-if="contract">
 				<li v-for="(project, thirdindex) in projects" v-bind:key="thirdindex">
-					<project-view :project="project" />
+					<project-view :project="project" @contract="$emit('contract')"/>
 				</li>
 			</ul>
 		</li>
