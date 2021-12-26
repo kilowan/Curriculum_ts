@@ -1,28 +1,33 @@
 <template>
-	<div v-if="!hide">
-		<dt id="idiomas" class="idiomas" v-if="languageList.length > 0">Idiomas
+	<div v-if="!hide">	
+		<dt id="experiencia" v-if="experience">Experiencia
 			<b-link @click="hide = true, $emit('contract')">
 				<b-icon icon="eye-slash-fill"/>
 			</b-link>
-    </dt>
-		<dd id="languages" v-if="languageList">
+		</dt>
+		<dd id="experience" v-if="experience">
 			<ul>
-				<li v-for="(languages, firstindex) in languageList" v-bind:key="firstindex">
-					<strong>{{ languages.name }}:</strong> {{ languages.level }}
-				</li>
+				<div v-for="(company, firstindex) in experience" v-bind:key="firstindex">
+					<professional-experience-view :token="token" :company="company" @contract="$emit('contract')" />
+				</div>
 			</ul>
 		</dd>
-    <dd class="clear"></dd>
+		<dd class="clear"></dd>
 	</div>
 </template>
 
 
 <script lang="ts">
 
+import ProfessionalExperienceView from './ProfessionalExperienceView.vue';
+
 export default {
-  name: 'AcademicTrainingView',
+  name: 'ProfessionalExperienceListView',
+  components: {
+	ProfessionalExperienceView
+  },
   props:{
-    languageList: {
+    experience: {
       type: Array,
       required: true
     },
@@ -33,8 +38,8 @@ export default {
   },
   data() {
 		return {
-      hide: false,
-    }
+			hide: false
+		}
 	},
 }
 </script>

@@ -1,28 +1,34 @@
 <template>
-	<div v-if="!hide">
-		<dt id="idiomas" class="idiomas" v-if="languageList.length > 0">Idiomas
+	<div v-if="!hide">	
+		<dt id="academica" v-if="academicTraining">Formación
 			<b-link @click="hide = true, $emit('contract')">
 				<b-icon icon="eye-slash-fill"/>
 			</b-link>
     </dt>
-		<dd id="languages" v-if="languageList">
+		<dd id="academic" v-if="academicTraining">
 			<ul>
-				<li v-for="(languages, firstindex) in languageList" v-bind:key="firstindex">
-					<strong>{{ languages.name }}:</strong> {{ languages.level }}
-				</li>
+				<div v-for="(academic, firstindex) in academicTraining" v-bind:key="firstindex">
+					<academic-training-view :academic="academic" :token="token" @contract="$emit('contract')" @editMode="$emit('editMode')" @refresh="$emit('refresh')" />
+				</div>
 			</ul>
 		</dd>
-    <dd class="clear"></dd>
+		<dd class="clear"></dd>
 	</div>
 </template>
 
 
 <script lang="ts">
+import { ContentType } from './Config/types'
+import AcademicTrainingView from './AcademicTrainingView.vue';
 
 export default {
-  name: 'AcademicTrainingView',
+  name: 'AcademicTrainingListView',
+  components: {
+    //ContentsView,
+    AcademicTrainingView
+  },
   props:{
-    languageList: {
+    academicTraining: {
       type: Array,
       required: true
     },
@@ -33,8 +39,9 @@ export default {
   },
   data() {
 		return {
+			ContentType: ContentType,
       hide: false,
-    }
+		}
 	},
 }
 </script>

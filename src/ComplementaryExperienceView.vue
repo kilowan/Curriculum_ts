@@ -1,18 +1,15 @@
 <template>
 	<div>		
-		<dt id="complementaria" v-if="otherTraining">Formación complementaria</dt>
-		<dd id="complementary" v-if="otherTraining">
-			<ul>
-				<li v-for="(otherTrainingData, firstindex) in otherTraining" v-bind:key="firstindex">
-					<strong>{{otherTrainingData.name}}</strong>
-					<ul>
-						<li>
-							<contents-view :type="ContentType.complementary" :contents="otherTrainingData.contents" :token="token" :trainingId="otherTrainingData.id" @editMode="$emit('editMode')" @refresh="$emit('refresh')"/>
-						</li>
-					</ul>
-				</li>
-			</ul>
-		</dd>
+		<strong>{{otherTrainingData.name}}</strong>
+		<b-link @click="contract = !contract, $emit('contract')">
+			<b-icon v-if="contract" icon="chevron-up"/>
+			<b-icon v-if="!contract" icon="chevron-down"/>
+		</b-link>
+		<ul v-if="contract">
+			<li>
+				<contents-view :type="ContentType.complementary" :contents="otherTrainingData.contents" :token="token" :trainingId="otherTrainingData.id" @editMode="$emit('editMode')" @refresh="$emit('refresh')"/>
+			</li>
+		</ul>
 	</div>
 </template>
 
@@ -27,7 +24,7 @@ export default {
     ContentsView
   },
   props:{
-    otherTraining: {
+    otherTrainingData: {
       type: Array,
       required: true
     },
@@ -38,7 +35,8 @@ export default {
   },
   data() {
 		return {
-			ContentType: ContentType
+			ContentType: ContentType,
+			contract: false
 		}
 	},
 }
