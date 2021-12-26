@@ -1,18 +1,25 @@
 <template>
 	<li v-if="!hide">	
 		{{academic.name}}
-		<b-link @click="contract = !contract, $emit('contract')">
+		<b-link v-if="!iconsHidden" @click="contract = !contract, $emit('contract')">
 			<b-icon v-if="contract" icon="chevron-up"/>
 			<b-icon v-if="!contract" icon="chevron-down"/>
 		</b-link>
-		<b-link @click="hide = true, $emit('contract')">
+		<b-link v-if="!iconsHidden" @click="hide = true, $emit('contract')">
 			<b-icon icon="eye-slash-fill"/>
 		</b-link>
 		<ul v-if="contract">
 			<li>Centro/ Lugar: {{academic.place}}</li>
 			<li v-if="academic.graduationDate">Graduación: {{new Date(academic.graduationDate).getFullYear()}}</li>
 			<li v-if="academic.contents.length >0">
-				<contents-view :contents="academic.contents" :type="ContentType.academic" :token="token" :trainingId="academic.id" @editMode="$emit('editMode')" @refresh="$emit('refresh')"/>
+				<contents-view 
+					:contents="academic.contents" 
+					:type="ContentType.academic" 
+					:token="token" :trainingId="academic.id"
+					:iconsHidden="iconsHidden"
+					@editMode="$emit('editMode')" 
+					@refresh="$emit('refresh')"
+				/>
 			</li>
 		</ul>
 	</li>
@@ -35,6 +42,10 @@ export default {
     },
     token: {
       type: String,
+      required: true
+    },
+    iconsHidden: {
+      type: Boolean,
       required: true
     },
   },

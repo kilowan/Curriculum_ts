@@ -3,7 +3,7 @@
       <b-icon v-if="socialMediaData.type === SocialMediaType.Linkedin" icon="linkedin" aria-hidden="true"/> <a v-if="socialMediaData.type === SocialMediaType.Linkedin" :href="'https://www.' + socialMediaData.name">{{ socialMediaData.name }}</a>
       <b-icon v-if="socialMediaData.type === SocialMediaType.GitHub" icon="github" aria-hidden="true"/> <a v-if="socialMediaData.type === SocialMediaType.GitHub" :href="socialMediaData.name">{{ socialMediaData.name }}</a>
       <b-icon v-if="socialMediaData.type === SocialMediaType.Infojobs" icon="link" aria-hidden="true"/> <a v-if="socialMediaData.type === SocialMediaType.Infojobs" :href="socialMediaData.name">{{ socialMediaData.name }}</a>
-			<b-link @click="hide = true, $emit('contract')">
+			<b-link v-if="!iconsHidden" @click="hide = true, $emit('contract')">
 				<b-icon icon="eye-slash-fill"/>
 			</b-link>
 	</div>
@@ -22,6 +22,10 @@ export default {
     },
     token: {
       type: String,
+      required: true
+    },
+    iconsHidden: {
+      type: Boolean,
       required: true
     },
   },

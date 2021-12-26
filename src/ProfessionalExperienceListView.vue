@@ -1,14 +1,19 @@
 <template>
 	<div v-if="!hide">	
 		<dt id="experiencia" v-if="experience">Experiencia
-			<b-link @click="hide = true, $emit('contract')">
+			<b-link v-if="!iconsHidden" @click="hide = true, $emit('contract')">
 				<b-icon icon="eye-slash-fill"/>
 			</b-link>
 		</dt>
 		<dd id="experience" v-if="experience">
 			<ul>
 				<div v-for="(company, firstindex) in experience" v-bind:key="firstindex">
-					<professional-experience-view :token="token" :company="company" @contract="$emit('contract')" />
+					<professional-experience-view 
+						:token="token" 
+						:company="company"
+						:iconsHidden="iconsHidden"
+						@contract="$emit('contract')" 
+					/>
 				</div>
 			</ul>
 		</dd>
@@ -33,6 +38,10 @@ export default {
     },
     token: {
       type: String,
+      required: true
+    },
+    iconsHidden: {
+      type: Boolean,
       required: true
     },
   },

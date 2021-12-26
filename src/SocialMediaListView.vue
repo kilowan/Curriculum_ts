@@ -1,7 +1,11 @@
 <template>
 	<div>	
 			<div v-for="(socialMediaData, index) in socialMedia" v-bind:key="index">
-        <social-media-view :token="token" :socialMediaData="socialMediaData" />
+        <social-media-view 
+          :token="token" 
+          :socialMediaData="socialMediaData"
+          :iconsHidden="iconsHidden"
+        />
 			</div>
 	</div>
 </template>
@@ -21,6 +25,10 @@ export default {
     },
     token: {
       type: String,
+      required: true
+    },
+    iconsHidden: {
+      type: Boolean,
       required: true
     },
   },

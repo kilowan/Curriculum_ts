@@ -1,7 +1,7 @@
 <template>
 <div>
 	{{project.name}}
-	<b-link @click="contract = !contract, $emit('contract')">
+	<b-link v-if="!iconsHidden" @click="contract = !contract, $emit('contract')">
 		<b-icon v-if="contract" icon="chevron-up"/>
 		<b-icon v-if="!contract" icon="chevron-down"/>
 	</b-link>
@@ -19,6 +19,10 @@ export default {
   props:{
     project: {
       type: Object,
+      required: true
+    },
+    iconsHidden: {
+      type: Boolean,
       required: true
     },
   },

@@ -1,13 +1,21 @@
 <template>
 	<div>		
 		<strong>{{otherTrainingData.name}}</strong>
-		<b-link @click="contract = !contract, $emit('contract')">
+		<b-link v-if="!iconsHidden" @click="contract = !contract, $emit('contract')">
 			<b-icon v-if="contract" icon="chevron-up"/>
 			<b-icon v-if="!contract" icon="chevron-down"/>
 		</b-link>
 		<ul v-if="contract">
 			<li>
-				<contents-view :type="ContentType.complementary" :contents="otherTrainingData.contents" :token="token" :trainingId="otherTrainingData.id" @editMode="$emit('editMode')" @refresh="$emit('refresh')"/>
+				<contents-view 
+					:type="ContentType.complementary" 
+					:contents="otherTrainingData.contents" 
+					:token="token" 
+					:trainingId="otherTrainingData.id"
+					:iconsHidden="iconsHidden"
+					@editMode="$emit('editMode')" 
+					@refresh="$emit('refresh')"
+				/>
 			</li>
 		</ul>
 	</div>
@@ -30,6 +38,10 @@ export default {
     },
     token: {
       type: String,
+      required: true
+    },
+    iconsHidden: {
+      type: Boolean,
       required: true
     },
   },

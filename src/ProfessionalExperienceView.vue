@@ -1,7 +1,7 @@
 <template>
 	<li>		
 		{{company.name}}
-		<b-link @click="contract = !contract, $emit('contract')">
+		<b-link v-if="!iconsHidden" @click="contract = !contract, $emit('contract')">
 			<b-icon v-if="contract" icon="chevron-up"/>
 			<b-icon v-if="!contract" icon="chevron-down"/>
 		</b-link>
@@ -9,7 +9,12 @@
 			<li>Centro/Lugar: {{company.place}}</li>
 			<li>Fecha inicio: {{new Date(company.initDate).toLocaleDateString()}}</li>
 			<li>Fecha Fin: {{new Date(company.finishDate).toLocaleDateString()}}</li>
-			<contracts-view v-if="company.contracts.length > 0" :contracts="company.contracts" @contract="$emit('contract')"/>
+			<contracts-view 
+				v-if="company.contracts.length > 0" 
+				:contracts="company.contracts" 
+				:iconsHidden="iconsHidden"
+				@contract="$emit('contract')"
+			/>
 		</ul>
 	</li>
 </template>
@@ -31,6 +36,10 @@ export default {
     },
     token: {
       type: String,
+      required: true
+    },
+    iconsHidden: {
+      type: Boolean,
       required: true
     },
   },
