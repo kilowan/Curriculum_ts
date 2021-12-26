@@ -1,6 +1,10 @@
 <template>
-	<div>
-		<dt id="otros" class="otros" v-if="other">Otros datos</dt>
+	<div v-if="!hide">
+		<dt id="otros" class="otros" v-if="other">Otros datos
+			<b-link @click="hide = true, $emit('contract')">
+				<b-icon icon="eye-slash-fill"/>
+			</b-link>
+    </dt>
 		<dd id="other" v-if="other">
 			<ul>
 				<li v-for="(otherData, firstindex) in other" v-bind:key="firstindex">
@@ -11,6 +15,7 @@
 				</li>
 			</ul>
 		</dd>
+    <dd class="clear"></dd>
 	</div>
 </template>
 
@@ -29,11 +34,10 @@ export default {
       required: true
     },
   },
-  components: {
-
-  },
   data() {
-		return {}
+		return {
+      hide: false,
+    }
 	},
 }
 </script>

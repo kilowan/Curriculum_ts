@@ -1,24 +1,17 @@
 <template>
-	<div>		
-		<dt id="experiencia" v-if="experience">Experiencia profesional</dt>
-		<dd id="experience" v-if="experience">
-			<ul>
-				<li v-for="(company, firstindex) in experience" v-bind:key="firstindex">
-					{{company.name}}
-					<b-link @click="contract = !contract, $emit('contract')">
-					<b-icon v-if="contract" icon="chevron-up"/>
-					<b-icon v-if="!contract" icon="chevron-down"/>
-					</b-link>
-					<ul v-if="contract">
-						<li>Centro/Lugar: {{company.place}}</li>
-						<li>Fecha inicio: {{new Date(company.initDate).toLocaleDateString()}}</li>
-						<li>Fecha Fin: {{new Date(company.finishDate).toLocaleDateString()}}</li>
-						<contracts-view v-if="company.contracts.length > 0" :contracts="company.contracts" @contract="$emit('contract')"/>
-					</ul>
-				</li>
-			</ul>
-		</dd>
-	</div>
+	<li>		
+		{{company.name}}
+		<b-link @click="contract = !contract, $emit('contract')">
+			<b-icon v-if="contract" icon="chevron-up"/>
+			<b-icon v-if="!contract" icon="chevron-down"/>
+		</b-link>
+		<ul v-if="contract">
+			<li>Centro/Lugar: {{company.place}}</li>
+			<li>Fecha inicio: {{new Date(company.initDate).toLocaleDateString()}}</li>
+			<li>Fecha Fin: {{new Date(company.finishDate).toLocaleDateString()}}</li>
+			<contracts-view v-if="company.contracts.length > 0" :contracts="company.contracts" @contract="$emit('contract')"/>
+		</ul>
+	</li>
 </template>
 
 
@@ -32,8 +25,8 @@ export default {
 	ContractsView
   },
   props:{
-    experience: {
-      type: Array,
+    company: {
+      type: Object,
       required: true
     },
     token: {

@@ -1,28 +1,33 @@
 <template>
-	<div v-if="!hide">
-		<dt id="idiomas" class="idiomas" v-if="languageList.length > 0">Idiomas
+	<div v-if="!hide">	
+		<dt id="complementaria" v-if="otherTraining">Skills
 			<b-link @click="hide = true, $emit('contract')">
 				<b-icon icon="eye-slash-fill"/>
 			</b-link>
-    </dt>
-		<dd id="languages" v-if="languageList">
+		</dt>
+		<dd id="complementary" v-if="otherTraining">
 			<ul>
-				<li v-for="(languages, firstindex) in languageList" v-bind:key="firstindex">
-					<strong>{{ languages.name }}:</strong> {{ languages.level }}
+				<li v-for="(otherTrainingData, firstindex) in otherTraining" v-bind:key="firstindex">
+					<complementary-experience-view :token="token" :otherTrainingData="otherTrainingData" @editMode="$emit('editMode')" @refresh="$emit('refresh')" @contract="$emit('contract')" />
 				</li>
 			</ul>
 		</dd>
-    <dd class="clear"></dd>
+		<dd class="clear"></dd>
 	</div>
 </template>
 
 
 <script lang="ts">
+import ComplementaryExperienceView from './ComplementaryExperienceView.vue';
+import { ContentType } from './Config/types'
 
 export default {
-  name: 'AcademicTrainingView',
+  name: 'ComplementaryExperienceListView',
+  components: {
+    ComplementaryExperienceView
+  },
   props:{
-    languageList: {
+    otherTraining: {
       type: Array,
       required: true
     },
@@ -33,8 +38,9 @@ export default {
   },
   data() {
 		return {
-      hide: false,
-    }
+			ContentType: ContentType,
+			hide: false
+		}
 	},
 }
 </script>

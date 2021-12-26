@@ -1,21 +1,21 @@
 <template>
-	<div>		
-		<dt id="academica" v-if="academicTraining">Formación académica</dt>
-		<dd id="academic" v-if="academicTraining">
-			<ul>
-				<li v-for="(academic, firstindex) in academicTraining" v-bind:key="firstindex">
-					{{academic.name}}
-					<ul>
-						<li>Centro/ Lugar: {{academic.place}}</li>
-						<li v-if="academic.graduationDate">Graduación: {{new Date(academic.graduationDate).getFullYear()}}</li>
-						<li v-if="academic.contents.length >0">
-							<contents-view :contents="academic.contents" :type="ContentType.academic" :token="token" :trainingId="academic.id" @editMode="$emit('editMode')" @refresh="$emit('refresh')"/>
-						</li>
-					</ul>
-				</li>
-			</ul>
-		</dd>
-	</div>
+	<li v-if="!hide">	
+		{{academic.name}}
+		<b-link @click="contract = !contract, $emit('contract')">
+			<b-icon v-if="contract" icon="chevron-up"/>
+			<b-icon v-if="!contract" icon="chevron-down"/>
+		</b-link>
+		<b-link @click="hide = true, $emit('contract')">
+			<b-icon icon="eye-slash-fill"/>
+		</b-link>
+		<ul v-if="contract">
+			<li>Centro/ Lugar: {{academic.place}}</li>
+			<li v-if="academic.graduationDate">Graduación: {{new Date(academic.graduationDate).getFullYear()}}</li>
+			<li v-if="academic.contents.length >0">
+				<contents-view :contents="academic.contents" :type="ContentType.academic" :token="token" :trainingId="academic.id" @editMode="$emit('editMode')" @refresh="$emit('refresh')"/>
+			</li>
+		</ul>
+	</li>
 </template>
 
 
@@ -29,7 +29,7 @@ export default {
     ContentsView
   },
   props:{
-    academicTraining: {
+    academic: {
       type: Array,
       required: true
     },
@@ -40,7 +40,9 @@ export default {
   },
   data() {
 		return {
-			ContentType: ContentType
+			ContentType: ContentType,
+			contract: false,
+			hide: false,
 		}
 	},
 }

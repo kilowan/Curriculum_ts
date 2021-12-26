@@ -4,29 +4,22 @@
 			<h1 class="fn">{{ data.fullName }}</h1>
 			<div v-if="data.phoneNumber">
 				<b-icon icon="telephone-fill" aria-hidden="true"/> <span>{{ data.phoneNumber.number }}</span><br />
+			</div>
+			<div v-if="data.email">
 				<b-icon icon="envelope" aria-hidden="true"/> <a :href="'mailto:'+ data.email.fullEmail">{{ data.email.fullEmail }}</a><br />
 			</div>
-			<div v-for="(socialMedia, index) in data.socialMedia" v-bind:key="index">
-				<b-icon v-if="socialMedia.type === SocialMediaType.Linkedin" icon="linkedin" aria-hidden="true"/> <a v-if="socialMedia.type === SocialMediaType.Linkedin" :href="'https://www.' + socialMedia.name">{{ socialMedia.name }}</a>
-				<b-icon v-if="socialMedia.type === SocialMediaType.GitHub" icon="github" aria-hidden="true"/> <a v-if="socialMedia.type === SocialMediaType.GitHub" :href="socialMedia.name">{{ socialMedia.name }}</a>
-				<b-icon v-if="socialMedia.type === SocialMediaType.Infojobs" icon="link" aria-hidden="true"/> <a v-if="socialMedia.type === SocialMediaType.Infojobs" :href="socialMedia.name">{{ socialMedia.name }}</a>
-			</div>
-		</div>					
+		</div>
+		<social-media-list-view :token="token" :socialMedia="data.socialMedia"/>				
 		<div id="objective">
 			<p>{{ data.description }}</p>
 		</div>		
 		<div class="clear">{{EditMode('')}}</div>	
 		<dl>
-			<professional-experience-view v-if="data.experience.length > 0"  :token="token" :experience="data.experience" @contract="EditMode" />
-			<dd class="clear"></dd>
-			<academic-training-view v-if="data.academicTraining.length > 0" :token="token"  :academicTraining="data.academicTraining" @editMode="EditMode" @refresh="getCurriculum(curriculumId)" />
-			<dd class="clear"></dd>
-			<complementary-experience-view v-if="data.otherTraining.length > 0" :token="token"  :otherTraining="data.otherTraining" @editMode="EditMode" @refresh="getCurriculum(curriculumId)" />
-			<dd class="clear"></dd>
+			<professional-experience-list-view v-if="data.experience.length > 0"  :token="token" :experience="data.experience" @contract="EditMode" />
+			<academic-training-list-view v-if="data.academicTraining.length > 0" :token="token"  :academicTraining="data.academicTraining" @editMode="EditMode" @contract="EditMode" @refresh="getCurriculum(curriculumId)" />
+			<complementary-experience-list-view v-if="data.otherTraining.length > 0" :token="token"  :otherTraining="data.otherTraining" @editMode="EditMode" @contract="EditMode" @refresh="getCurriculum(curriculumId)" />
 			<language-list v-if="data.languageList.length > 0" :token="token" :languageList="data.languageList" />			
-			<dd class="clear"></dd>
 			<other v-if="data.otherData"  :token="token"  :other="data.otherData" @load="EditMode('mounted')"/>
-			<dd class="clear"></dd>
 		</dl>
 		<dd class="clear"></dd>
 	</div>
@@ -34,22 +27,24 @@
 
 
 <script lang="ts">
-import  AcademicTrainingView from './AcademicTrainingView.vue';
+import  AcademicTrainingListView from './AcademicTrainingListView.vue';
 import  Other from './OtherView.vue';
-import ProfessionalExperienceView from './ProfessionalExperienceView.vue';
-import ComplementaryExperienceView from './ComplementaryExperienceView.vue';
+import ProfessionalExperienceListView from './ProfessionalExperienceListView.vue';
+import ComplementaryExperienceListView from './ComplementaryExperienceListView.vue';
 import LanguageList from './LanguagesView.vue';
+import SocialMediaListView from './SocialMediaListView.vue';
 import axios from 'axios';
 import { SocialMediaType } from './Config/types';
 
 export default {
   name: 'CurriculumView',
   components: {
-	AcademicTrainingView,
+	AcademicTrainingListView,
 	Other,
-	ProfessionalExperienceView,
-	ComplementaryExperienceView,
-	LanguageList
+	ProfessionalExperienceListView,
+	ComplementaryExperienceListView,
+	LanguageList,
+	SocialMediaListView
   },
   data() {
 		return {

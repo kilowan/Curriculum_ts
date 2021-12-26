@@ -1,28 +1,22 @@
 <template>
 	<div v-if="!hide">
-		<dt id="idiomas" class="idiomas" v-if="languageList.length > 0">Idiomas
+      <b-icon v-if="socialMediaData.type === SocialMediaType.Linkedin" icon="linkedin" aria-hidden="true"/> <a v-if="socialMediaData.type === SocialMediaType.Linkedin" :href="'https://www.' + socialMediaData.name">{{ socialMediaData.name }}</a>
+      <b-icon v-if="socialMediaData.type === SocialMediaType.GitHub" icon="github" aria-hidden="true"/> <a v-if="socialMediaData.type === SocialMediaType.GitHub" :href="socialMediaData.name">{{ socialMediaData.name }}</a>
+      <b-icon v-if="socialMediaData.type === SocialMediaType.Infojobs" icon="link" aria-hidden="true"/> <a v-if="socialMediaData.type === SocialMediaType.Infojobs" :href="socialMediaData.name">{{ socialMediaData.name }}</a>
 			<b-link @click="hide = true, $emit('contract')">
 				<b-icon icon="eye-slash-fill"/>
 			</b-link>
-    </dt>
-		<dd id="languages" v-if="languageList">
-			<ul>
-				<li v-for="(languages, firstindex) in languageList" v-bind:key="firstindex">
-					<strong>{{ languages.name }}:</strong> {{ languages.level }}
-				</li>
-			</ul>
-		</dd>
-    <dd class="clear"></dd>
 	</div>
 </template>
 
 
 <script lang="ts">
+import { SocialMediaType } from './Config/types';
 
 export default {
-  name: 'AcademicTrainingView',
+  name: 'SocialMediaView',
   props:{
-    languageList: {
+    socialMediaData: {
       type: Array,
       required: true
     },
@@ -33,8 +27,9 @@ export default {
   },
   data() {
 		return {
-      hide: false,
-    }
+      SocialMediaType: SocialMediaType,
+      hide: false
+		}
 	},
 }
 </script>
