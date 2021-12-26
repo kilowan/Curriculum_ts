@@ -1,7 +1,7 @@
 <template>
 	<div>	
 		<strong class="m-2">Contenido:</strong>
-    <b-link class="m-2" @click="editMode = !editMode, $emit('editMode')">
+    <b-link v-if="!iconsHidden" class="m-2" @click="editMode = !editMode, $emit('editMode')">
       <b-icon v-if="!editMode" icon="toggle-off" aria-hidden="true"/>
       <b-icon v-if="editMode" icon="toggle-on" aria-hidden="true"/>
     </b-link>
@@ -46,6 +46,10 @@ export default {
     },
     token: {
       type: String,
+      required: true
+    },
+    iconsHidden: {
+      type: Boolean,
       required: true
     },
   },

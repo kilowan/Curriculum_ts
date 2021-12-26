@@ -1,5 +1,8 @@
 <template>
-	<div id="page-wrap">			
+	<div id="page-wrap">
+		<b-link v-if="!iconsHidden" @click="iconsHidden = true">
+			<b-icon icon="eye-slash-fill"/>
+		</b-link>
 		<div id="contact-info" class="vcard">
 			<h1 class="fn">{{ data.fullName }}</h1>
 			<div v-if="data.phoneNumber">
@@ -9,17 +12,54 @@
 				<b-icon icon="envelope" aria-hidden="true"/> <a :href="'mailto:'+ data.email.fullEmail">{{ data.email.fullEmail }}</a><br />
 			</div>
 		</div>
-		<social-media-list-view :token="token" :socialMedia="data.socialMedia"/>				
+		<social-media-list-view 
+			:token="token" 
+			:socialMedia="data.socialMedia"
+			:iconsHidden="iconsHidden"
+		/>				
 		<div id="objective">
 			<p>{{ data.description }}</p>
 		</div>		
 		<div class="clear">{{EditMode('')}}</div>	
 		<dl>
-			<professional-experience-list-view v-if="data.experience.length > 0"  :token="token" :experience="data.experience" @contract="EditMode" />
-			<academic-training-list-view v-if="data.academicTraining.length > 0" :token="token"  :academicTraining="data.academicTraining" @editMode="EditMode" @contract="EditMode" @refresh="getCurriculum(curriculumId)" />
-			<complementary-experience-list-view v-if="data.otherTraining.length > 0" :token="token"  :otherTraining="data.otherTraining" @editMode="EditMode" @contract="EditMode" @refresh="getCurriculum(curriculumId)" />
-			<language-list v-if="data.languageList.length > 0" :token="token" :languageList="data.languageList" />			
-			<other v-if="data.otherData"  :token="token"  :other="data.otherData" @load="EditMode('mounted')"/>
+			<professional-experience-list-view 
+				v-if="data.experience.length > 0"  
+				:token="token" 
+				:experience="data.experience"
+				:iconsHidden="iconsHidden"
+				@contract="EditMode" 
+			/>
+			<academic-training-list-view 
+				v-if="data.academicTraining.length > 0" 
+				:token="token" 
+				:academicTraining="data.academicTraining"
+				:iconsHidden="iconsHidden"
+				@editMode="EditMode" 
+				@contract="EditMode" 
+				@refresh="getCurriculum(curriculumId)" 
+			/>
+			<complementary-experience-list-view 
+				v-if="data.otherTraining.length > 0" 
+				:token="token"  
+				:otherTraining="data.otherTraining"
+				:iconsHidden="iconsHidden"
+				@editMode="EditMode" 
+				@contract="EditMode" 
+				@refresh="getCurriculum(curriculumId)" 
+			/>
+			<language-list 
+				v-if="data.languageList.length > 0" 
+				:token="token" 
+				:languageList="data.languageList"
+				:iconsHidden="iconsHidden"
+			/>			
+			<other 
+				v-if="data.otherData"  
+				:token="token"  
+				:other="data.otherData"
+				:iconsHidden="iconsHidden"
+				@load="EditMode('mounted')"
+			/>
 		</dl>
 		<dd class="clear"></dd>
 	</div>
@@ -57,7 +97,8 @@ export default {
 			data: {},
 			token: '',
 			curriculumId: '',
-			SocialMediaType: SocialMediaType
+			SocialMediaType: SocialMediaType,
+			iconsHidden: false
 		}
 	},
   methods: {

@@ -1,14 +1,21 @@
 <template>
 	<div v-if="!hide">	
 		<dt id="academica" v-if="academicTraining">Formación
-			<b-link @click="hide = true, $emit('contract')">
+			<b-link v-if="!iconsHidden" @click="hide = true, $emit('contract')">
 				<b-icon icon="eye-slash-fill"/>
 			</b-link>
     </dt>
 		<dd id="academic" v-if="academicTraining">
 			<ul>
 				<div v-for="(academic, firstindex) in academicTraining" v-bind:key="firstindex">
-					<academic-training-view :academic="academic" :token="token" @contract="$emit('contract')" @editMode="$emit('editMode')" @refresh="$emit('refresh')" />
+					<academic-training-view 
+            :academic="academic" 
+            :token="token"
+            :iconsHidden="iconsHidden"
+            @contract="$emit('contract')" 
+            @editMode="$emit('editMode')" 
+            @refresh="$emit('refresh')" 
+          />
 				</div>
 			</ul>
 		</dd>
@@ -34,6 +41,10 @@ export default {
     },
     token: {
       type: String,
+      required: true
+    },
+    iconsHidden: {
+      type: Boolean,
       required: true
     },
   },

@@ -2,13 +2,17 @@
 	<ul>
 		<li>
 			Proyectos:
-			<b-link @click="contract = !contract, $emit('contract')">
+			<b-link v-if="!iconsHidden" @click="contract = !contract, $emit('contract')">
 				<b-icon v-if="contract" icon="chevron-up"/>
 				<b-icon v-if="!contract" icon="chevron-down"/>
 			</b-link>
 			<ul v-if="contract">
 				<li v-for="(project, thirdindex) in projects" v-bind:key="thirdindex">
-					<project-view :project="project" @contract="$emit('contract')"/>
+					<project-view 
+						:project="project"
+						:iconsHidden="iconsHidden"
+						@contract="$emit('contract')"
+					/>
 				</li>
 			</ul>
 		</li>
@@ -27,6 +31,10 @@ export default {
   props:{
     projects: {
       type: Array,
+      required: true
+    },
+    iconsHidden: {
+      type: Boolean,
       required: true
     },
   },

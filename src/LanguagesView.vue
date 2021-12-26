@@ -1,7 +1,7 @@
 <template>
 	<div v-if="!hide">
 		<dt id="idiomas" class="idiomas" v-if="languageList.length > 0">Idiomas
-			<b-link @click="hide = true, $emit('contract')">
+			<b-link v-if="!iconsHidden" @click="hide = true, $emit('contract')">
 				<b-icon icon="eye-slash-fill"/>
 			</b-link>
     </dt>
@@ -28,6 +28,10 @@ export default {
     },
     token: {
       type: String,
+      required: true
+    },
+    iconsHidden: {
+      type: Boolean,
       required: true
     },
   },

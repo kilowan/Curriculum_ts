@@ -1,14 +1,21 @@
 <template>
 	<div v-if="!hide">	
 		<dt id="complementaria" v-if="otherTraining">Skills
-			<b-link @click="hide = true, $emit('contract')">
+			<b-link v-if="!iconsHidden" @click="hide = true, $emit('contract')">
 				<b-icon icon="eye-slash-fill"/>
 			</b-link>
 		</dt>
 		<dd id="complementary" v-if="otherTraining">
 			<ul>
 				<li v-for="(otherTrainingData, firstindex) in otherTraining" v-bind:key="firstindex">
-					<complementary-experience-view :token="token" :otherTrainingData="otherTrainingData" @editMode="$emit('editMode')" @refresh="$emit('refresh')" @contract="$emit('contract')" />
+					<complementary-experience-view 
+						:token="token" 
+						:otherTrainingData="otherTrainingData"
+						:iconsHidden="iconsHidden"
+						@editMode="$emit('editMode')" 
+						@refresh="$emit('refresh')" 
+						@contract="$emit('contract')" 
+					/>
 				</li>
 			</ul>
 		</dd>
@@ -33,6 +40,10 @@ export default {
     },
     token: {
       type: String,
+      required: true
+    },
+    iconsHidden: {
+      type: Boolean,
       required: true
     },
   },
