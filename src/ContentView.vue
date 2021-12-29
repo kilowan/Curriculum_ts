@@ -20,7 +20,8 @@
             :editMode="editMode" 
             :token="token" 
             :subContent="subcontent" 
-            :type="type" 
+            :type="type"
+            :iconsHidden="iconsHidden"
             @refresh="$emit('refresh')"
             @hide="$emit('hide')"
           />
@@ -106,6 +107,10 @@ export default {
       required: true
     },
     editMode: {
+      type: Boolean,
+      required: true,
+    },
+    iconsHidden: {
       type: Boolean,
       required: true,
     }

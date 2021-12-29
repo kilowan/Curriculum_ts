@@ -58,6 +58,10 @@ export default {
     editMode: {
       type: Boolean,
       required: true
+    },
+    iconsHidden: {
+      type: Boolean,
+      required: true
     }
   },
   data() {
