@@ -1,34 +1,20 @@
 <template>
 	<li v-if="!hide">
-    {{otherData.name}}
-		<b-link v-if="!iconsHidden" @click="hide = true, $emit('hide')">
-			<b-icon icon="eye-slash-fill"/>
-		</b-link>
-    <ul v-if="otherData.values.length > 0">
-      <div v-for="(value, secondindex) in otherData.values" v-bind:key="secondindex">
-        <value-view
-          :value="value"
-          :token="token"
-          :iconsHidden="iconsHidden"
-          @hide="$emit('sizeChange')"
-        />
-      </div>
-    </ul>
+    <strong>{{ language.name }}:</strong> {{ language.level }}
+    <b-link v-if="!iconsHidden" @click="hide = true, $emit('hide')">
+      <b-icon icon="eye-slash-fill"/>
+    </b-link>
 	</li>
 </template>
 
 
 <script lang="ts">
-import valueView from './ValueView.vue';
 
 export default {
-  name: 'OtherView',
-  components: {
-    valueView,
-  },
+  name: 'AcademicTrainingView',
   props:{
-    otherData: {
-      type: Object,
+    language: {
+      type: Array,
       required: true
     },
     token: {

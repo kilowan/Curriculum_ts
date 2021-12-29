@@ -1,26 +1,26 @@
 <template>
 	<li v-if="!hide">	
 		{{academic.name}}
-		<b-link v-if="!iconsHidden" @click="contract = !contract, $emit('contract')">
+		<b-link v-if="!iconsHidden" @click="contract = !contract, $emit('sizeChange')">
 			<b-icon v-if="contract" icon="chevron-up"/>
 			<b-icon v-if="!contract" icon="chevron-down"/>
 		</b-link>
-		<b-link v-if="!iconsHidden" @click="hide = true, $emit('contract')">
+		<b-link v-if="!iconsHidden" @click="hide = true, $emit('hide')">
 			<b-icon icon="eye-slash-fill"/>
 		</b-link>
 		<ul v-if="contract">
 			<li>Centro/ Lugar: {{academic.place}}</li>
 			<li v-if="academic.graduationDate">Graduación: {{new Date(academic.graduationDate).getFullYear()}}</li>
-			<li v-if="academic.contents.length >0">
+			<div v-if="academic.contents.length >0">
 				<contents-view 
 					:contents="academic.contents" 
 					:type="ContentType.academic" 
 					:token="token" :trainingId="academic.id"
 					:iconsHidden="iconsHidden"
-					@editMode="$emit('editMode')" 
+					@sizeChange="$emit('sizeChange')" 
 					@refresh="$emit('refresh')"
 				/>
-			</li>
+			</div>
 		</ul>
 	</li>
 </template>

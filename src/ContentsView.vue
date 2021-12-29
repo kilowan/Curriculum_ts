@@ -1,14 +1,25 @@
 <template>
-	<div>	
+	<li v-if="!hide">	
 		<strong class="m-2">Contenido:</strong>
-    <b-link v-if="!iconsHidden" class="m-2" @click="editMode = !editMode, $emit('editMode')">
+    <b-link 
+      v-if="!iconsHidden" class="m-2" 
+      @click="editMode = !editMode, $emit('sizeChange')"
+    >
       <b-icon v-if="!editMode" icon="toggle-off" aria-hidden="true"/>
       <b-icon v-if="editMode" icon="toggle-on" aria-hidden="true"/>
     </b-link>
 		<ul>
-			<li v-for="(content, i) in contents" v-bind:key="i">
-        <content-view :editMode="editMode" :content="content" :type="type" :token="token" @editMode="$emit('editMode')" @refresh="$emit('refresh')"/>
-			</li>
+			<div v-for="(content, i) in contents" v-bind:key="i">
+        <content-view
+          :editMode="editMode"
+          :content="content"
+          :type="type"
+          :token="token"
+          @editMode="$emit('sizeChange')"
+          @hide="hidden"
+          @refresh="$emit('refresh')"
+        />
+			</div>
       <div v-if="add">
         <input class="m-2" type="text" v-model="element" />
         <b-button class="m-2" @click="save">Guardar</b-button>
@@ -18,7 +29,7 @@
         <b-icon icon="plus-circle-fill" aria-hidden="true"/> Añadir contenido
       </b-link>
 		</ul>
-	</div>
+	</li>
 </template>
 
 
@@ -58,14 +69,23 @@ export default {
       add: false,
       element: '',
       editMode: false,
+      counter: 0,
+      hide: false,
     }
 	},
   methods: {
-    cancel(){
+    hidden() {
+      this.counter--;
+      if (this.counter == 0) {
+        this.hide = true;
+      }
+      this.$emit('sizeChange');
+    },
+    cancel() {
       this.element = '';
       this.add = false;
     },
-    async save(){
+    async save() {
       if (this.element !== '') {
         await axios({
           method: 'post',
@@ -82,7 +102,10 @@ export default {
         });
       }
     }
-  }
+  },
+  mounted(){
+    this.counter = this.contents.length;
+  },
 }
 </script>
 

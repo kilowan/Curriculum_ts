@@ -1,22 +1,22 @@
 <template>
 	<div v-if="!hide">	
 		<dt id="complementaria" v-if="otherTraining">Skills
-			<b-link v-if="!iconsHidden" @click="hide = true, $emit('contract')">
+			<b-link v-if="!iconsHidden" @click="hide = true, $emit('sizeChange')">
 				<b-icon icon="eye-slash-fill"/>
 			</b-link>
 		</dt>
 		<dd id="complementary" v-if="otherTraining">
 			<ul>
-				<li v-for="(otherTrainingData, firstindex) in otherTraining" v-bind:key="firstindex">
+				<div v-for="(otherTrainingData, firstindex) in otherTraining" v-bind:key="firstindex">
 					<complementary-experience-view 
 						:token="token" 
 						:otherTrainingData="otherTrainingData"
 						:iconsHidden="iconsHidden"
-						@editMode="$emit('editMode')" 
-						@refresh="$emit('refresh')" 
-						@contract="$emit('contract')" 
+						@sizeChange="$emit('sizeChange')"
+						@hide="hidden"
+						@refresh="$emit('refresh')"
 					/>
-				</li>
+				</div>
 			</ul>
 		</dd>
 		<dd class="clear"></dd>
@@ -50,8 +50,21 @@ export default {
   data() {
 		return {
 			ContentType: ContentType,
-			hide: false
+			hide: false,
+			counter: 0,
 		}
+	},
+	methods: {
+		hidden() {
+			this.counter--;
+			if (this.counter == 0) {
+				this.hide = true;
+			}
+			this.$emit('sizeChange');
+		},
+	},
+	mounted(){
+		this.counter = this.otherTraining.length;
 	},
 }
 </script>
