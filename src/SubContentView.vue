@@ -1,14 +1,17 @@
 <template>
 	<div>
-      <div>
-        {{ subContentData.name }} 
+      <li v-if="!hide">
+        {{ subContentData.name }}
+        <b-link v-if="!iconsHidden" @click="hide = true, $emit('hide')">
+          <b-icon icon="eye-slash-fill"/>
+        </b-link>
         <b-link v-if="editMode" @click="$bvModal.show(`edit-subcontent-${subContentData.id}`)">
           <b-icon icon="pencil-square" aria-hidden="true"/>
         </b-link>
         <b-link v-if="editMode" @click="$bvModal.show(`delete-subcontent-${subContentData.id}`)">
           <b-icon icon="x-circle-fill" aria-hidden="true"/>
         </b-link>
-      </div>
+      </li>
     <b-modal 
 			:id="`delete-subcontent-${subContentData.id}`" 
 			title="Eliminar Contenido"
@@ -64,6 +67,7 @@ export default {
         id: Number.prototype,
         name: String.prototype,
       },
+      hide: false,
     }
 	},
   methods:{
@@ -72,7 +76,6 @@ export default {
       this.edit = false;
     },
     async deleteContent(){
-      debugger;
       if (this.subContentData.id) {
         await axios({
           method: 'delete',

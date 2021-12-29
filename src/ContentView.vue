@@ -1,73 +1,85 @@
 <template>
-	<div>
-      <div>
-        {{ contentData.name }} 
-        <b-link v-if="editMode" @click="$bvModal.show(`edit-content-${contentData.id}`)">
-          <b-icon icon="pencil-square" aria-hidden="true"/>
-        </b-link>
+	<div v-if="!hide">
+    <li>
+      {{ contentData.name }}
+      <b-link v-if="!iconsHidden" @click="hide = true, $emit('hide')">
+        <b-icon icon="eye-slash-fill"/>
+      </b-link>
+      <b-link v-if="editMode" @click="$bvModal.show(`edit-content-${contentData.id}`)">
+        <b-icon icon="pencil-square" aria-hidden="true"/>
+      </b-link>
       <b-link v-if="content.subContents.length === 0 && editMode" @click="$bvModal.show(`add-subcontents-${contentData.id}`)">
         <b-icon icon="plus-circle-fill" aria-hidden="true"/>
       </b-link>
       <b-link v-if="content.subContents.length === 0 && editMode" @click="$bvModal.show(`delete-content-${contentData.id}`)">
         <b-icon icon="x-circle-fill" aria-hidden="true"/>
       </b-link>
-      </div>
       <ul>
-        <li v-for="(subcontent, thirdindex) in content.subContents" v-bind:key="thirdindex">
-          <sub-content :editMode="editMode" :token="token" :subContent="subcontent" :type="type" @refresh="$emit('refresh')"/>
-        </li>
+        <div v-for="(subcontent, thirdindex) in content.subContents" v-bind:key="thirdindex">
+          <sub-content
+            :editMode="editMode" 
+            :token="token" 
+            :subContent="subcontent" 
+            :type="type" 
+            @refresh="$emit('refresh')"
+            @hide="$emit('hide')"
+          />
+        </div>
         <b-link v-if="editMode" @click="$bvModal.show(`add-subcontent-${contentData.id}`)">
           <b-icon icon="plus-circle-fill" aria-hidden="true"/>Añadir SubContenido
         </b-link>
       </ul>
+    </li>
     <b-modal 
-			:id="`delete-content-${contentData.id}`" 
-			title="Eliminar Contenido"
+      :id="`delete-content-${contentData.id}`" 
+      title="Eliminar Contenido"
       ok-title="Eliminar"
       @ok="deleteContent"
-		>
+    >
       <div style="text-align: center; margin: 0 auto; width:380px;">
         <h1>¿Seguro que quieres eliminar el elemento '{{ contentData.name }}'?</h1>
-			</div>
-		</b-modal>
-		<b-modal 
-			:id="`edit-content-${contentData.id}`" 
-			title="Editar Contenido"
+      </div>
+    </b-modal>
+    <b-modal 
+      :id="`edit-content-${contentData.id}`" 
+      title="Editar Contenido"
       ok-title="Guardar"
       @ok="save"
       @cancel="cancel"
-		>
-			<div style="text-align: center; margin: 0 auto; width:380px;">
+    >
+      <div style="text-align: center; margin: 0 auto; width:380px;">
         <input class="m-2" type="text" v-model="contentData.name" />
-			</div>
-		</b-modal>
-		<b-modal 
-			:id="`add-subcontent-${contentData.id}`" 
-			title="Añadir SubContenido"
+      </div>
+    </b-modal>
+    <b-modal 
+      :id="`add-subcontent-${contentData.id}`" 
+      title="Añadir SubContenido"
       ok-title="Guardar"
       @ok="addOne(subcontent)"
-		>
-			<div style="text-align: center; margin: 0 auto; width:380px;">
+    >
+      <div style="text-align: center; margin: 0 auto; width:380px;">
         <input class="m-2" type="text" placeholder="Nuevo subcontenido" v-model="subcontent" />
-			</div>
-		</b-modal>
-		<b-modal 
-			:id="`add-subcontents-${contentData.id}`" 
-			title="Añadir SubContenido"
+      </div>
+    </b-modal>
+    <b-modal 
+      :id="`add-subcontents-${contentData.id}`" 
+      title="Añadir SubContenido"
       ok-title="Guardar"
       @ok="AddSubContent"
-		>
-			<div style="text-align: center; margin: 0 auto; width:380px;">
+    >
+      <div style="text-align: center; margin: 0 auto; width:380px;">
         <ul>
-          <li v-for="(subcontent, i) in subContents" v-bind:key="i">{{subcontent}}</li>
+          <li v-for="(subcontent, i) in subContents" v-bind:key="i">
+            {{subcontent}}
+          </li>
         </ul>
         <input class="m-2" type="text" placeholder="Nuevo subcontenido" v-model="subcontent" />
         <b-link @click="add(subcontent)">
           <b-icon icon="plus-circle-fill" aria-hidden="true"/>
         </b-link>
-			</div>
-		</b-modal>
-	</div>
+      </div>
+    </b-modal>
+  </div>
 </template>
 
 
@@ -101,6 +113,7 @@ export default {
   data() {
 		return {
       edit: false,
+      hide: false,
       contentData: {
         id: Number.prototype,
         name: String.prototype,

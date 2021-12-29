@@ -1,7 +1,7 @@
 <template>
 	<div v-if="!hide">	
 		<dt id="academica" v-if="academicTraining">Formación
-			<b-link v-if="!iconsHidden" @click="hide = true, $emit('contract')">
+			<b-link v-if="!iconsHidden" @click="hide = true, $emit('sizeChange')">
 				<b-icon icon="eye-slash-fill"/>
 			</b-link>
     </dt>
@@ -12,8 +12,8 @@
             :academic="academic" 
             :token="token"
             :iconsHidden="iconsHidden"
-            @contract="$emit('contract')" 
-            @editMode="$emit('editMode')" 
+            @hide="hidden"
+            @sizeChange="$emit('sizeChange')" 
             @refresh="$emit('refresh')" 
           />
 				</div>
@@ -31,7 +31,6 @@ import AcademicTrainingView from './AcademicTrainingView.vue';
 export default {
   name: 'AcademicTrainingListView',
   components: {
-    //ContentsView,
     AcademicTrainingView
   },
   props:{
@@ -48,12 +47,25 @@ export default {
       required: true
     },
   },
+  methods: {
+    hidden() {
+      this.counter--;
+      if (this.counter == 0) {
+        this.hide = true;
+      }
+      this.$emit('sizeChange');
+    },
+  },
   data() {
 		return {
 			ContentType: ContentType,
       hide: false,
+      counter: 0,
 		}
 	},
+  mounted(){
+    this.counter = this.academicTraining.length;
+  },
 }
 </script>
 

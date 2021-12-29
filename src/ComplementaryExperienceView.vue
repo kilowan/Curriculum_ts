@@ -1,24 +1,27 @@
 <template>
-	<div>		
+	<li v-if="!hide">		
 		<strong>{{otherTrainingData.name}}</strong>
-		<b-link v-if="!iconsHidden" @click="contract = !contract, $emit('contract')">
+		<b-link v-if="!iconsHidden" @click="hide = true, $emit('hide')">
+			<b-icon icon="eye-slash-fill"/>
+		</b-link>
+		<b-link v-if="!iconsHidden" @click="contract = !contract, $emit('sizeChange')">
 			<b-icon v-if="contract" icon="chevron-up"/>
 			<b-icon v-if="!contract" icon="chevron-down"/>
 		</b-link>
 		<ul v-if="contract">
-			<li>
+			<div>
 				<contents-view 
 					:type="ContentType.complementary" 
 					:contents="otherTrainingData.contents" 
 					:token="token" 
 					:trainingId="otherTrainingData.id"
 					:iconsHidden="iconsHidden"
-					@editMode="$emit('editMode')" 
+					@sizeChange="$emit('sizeChange')"
 					@refresh="$emit('refresh')"
 				/>
-			</li>
+			</div>
 		</ul>
-	</div>
+	</li>
 </template>
 
 
@@ -48,7 +51,8 @@ export default {
   data() {
 		return {
 			ContentType: ContentType,
-			contract: false
+			contract: false,
+			hide: false,
 		}
 	},
 }

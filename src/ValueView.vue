@@ -1,34 +1,20 @@
 <template>
 	<li v-if="!hide">
-    {{otherData.name}}
+    {{value}}
 		<b-link v-if="!iconsHidden" @click="hide = true, $emit('hide')">
 			<b-icon icon="eye-slash-fill"/>
 		</b-link>
-    <ul v-if="otherData.values.length > 0">
-      <div v-for="(value, secondindex) in otherData.values" v-bind:key="secondindex">
-        <value-view
-          :value="value"
-          :token="token"
-          :iconsHidden="iconsHidden"
-          @hide="$emit('sizeChange')"
-        />
-      </div>
-    </ul>
 	</li>
 </template>
 
 
 <script lang="ts">
-import valueView from './ValueView.vue';
 
 export default {
-  name: 'OtherView',
-  components: {
-    valueView,
-  },
+  name: 'ValueView',
   props:{
-    otherData: {
-      type: Object,
+    value: {
+      type: String,
       required: true
     },
     token: {

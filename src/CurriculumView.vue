@@ -34,8 +34,7 @@
 				:token="token" 
 				:academicTraining="data.academicTraining"
 				:iconsHidden="iconsHidden"
-				@editMode="EditMode" 
-				@contract="EditMode" 
+				@sizeChange="EditMode"
 				@refresh="getCurriculum(curriculumId)" 
 			/>
 			<complementary-experience-list-view 
@@ -43,22 +42,23 @@
 				:token="token"  
 				:otherTraining="data.otherTraining"
 				:iconsHidden="iconsHidden"
-				@editMode="EditMode" 
+				@sizeChange="EditMode"
 				@contract="EditMode" 
 				@refresh="getCurriculum(curriculumId)" 
 			/>
-			<language-list 
+			<language-list-view 
 				v-if="data.languageList.length > 0" 
 				:token="token" 
 				:languageList="data.languageList"
 				:iconsHidden="iconsHidden"
+				@sizeChange="EditMode"
 			/>			
-			<other 
+			<other-list-view
 				v-if="data.otherData"  
 				:token="token"  
 				:other="data.otherData"
 				:iconsHidden="iconsHidden"
-				@load="EditMode('mounted')"
+				@sizeChange="EditMode"
 			/>
 		</dl>
 		<dd class="clear"></dd>
@@ -68,10 +68,10 @@
 
 <script lang="ts">
 import  AcademicTrainingListView from './AcademicTrainingListView.vue';
-import  Other from './OtherView.vue';
+import  OtherListView from './OtherListView.vue';
 import ProfessionalExperienceListView from './ProfessionalExperienceListView.vue';
 import ComplementaryExperienceListView from './ComplementaryExperienceListView.vue';
-import LanguageList from './LanguagesView.vue';
+import LanguageListView from './LanguageListView.vue';
 import SocialMediaListView from './SocialMediaListView.vue';
 import axios from 'axios';
 import { SocialMediaType } from './Config/types';
@@ -80,10 +80,10 @@ export default {
   name: 'CurriculumView',
   components: {
 	AcademicTrainingListView,
-	Other,
+	OtherListView,
 	ProfessionalExperienceListView,
 	ComplementaryExperienceListView,
-	LanguageList,
+	LanguageListView,
 	SocialMediaListView
   },
   data() {

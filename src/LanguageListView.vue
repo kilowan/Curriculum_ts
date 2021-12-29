@@ -1,34 +1,38 @@
 <template>
-	<li v-if="!hide">
-    {{otherData.name}}
-		<b-link v-if="!iconsHidden" @click="hide = true, $emit('hide')">
-			<b-icon icon="eye-slash-fill"/>
-		</b-link>
-    <ul v-if="otherData.values.length > 0">
-      <div v-for="(value, secondindex) in otherData.values" v-bind:key="secondindex">
-        <value-view
-          :value="value"
-          :token="token"
-          :iconsHidden="iconsHidden"
-          @hide="$emit('sizeChange')"
-        />
-      </div>
-    </ul>
-	</li>
+	<div v-if="!hide">
+		<dt id="idiomas" class="idiomas" v-if="languageList.length > 0">Idiomas
+			<b-link v-if="!iconsHidden" @click="hide = true, $emit('hide')">
+				<b-icon icon="eye-slash-fill"/>
+			</b-link>
+    </dt>
+		<dd id="languages" v-if="languageList">
+			<ul>
+				<div v-for="(languages, firstindex) in languageList" v-bind:key="firstindex">
+          <language-view 
+            :language="languages" 
+            :token="token" 
+            :iconsHidden="iconsHidden" 
+            @hide="hiden"
+          />
+				</div>
+			</ul>
+		</dd>
+    <dd class="clear"></dd>
+	</div>
 </template>
 
 
 <script lang="ts">
-import valueView from './ValueView.vue';
+import LanguageView from './LanguageView.vue';
 
 export default {
-  name: 'OtherView',
-  components: {
-    valueView,
+  name: 'AcademicTrainingView',
+  components:{
+    LanguageView
   },
   props:{
-    otherData: {
-      type: Object,
+    languageList: {
+      type: Array,
       required: true
     },
     token: {
@@ -40,11 +44,24 @@ export default {
       required: true
     },
   },
+  methods: {
+    hiden(){
+      this.counter--;
+      if (this.counter == 0) {
+        this.hide = true;
+      }
+      this.$emit('sizeChange');
+    },
+  },
   data() {
 		return {
       hide: false,
+      counter: 0,
     }
 	},
+  mounted(){
+    this.counter = this.languageList.length;
+  },
 }
 </script>
 
