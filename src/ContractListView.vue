@@ -1,41 +1,45 @@
 <template>
-	<li>		
-		{{company.name}}
-		<b-link v-if="!iconsHidden" @click="contract = !contract, $emit('contract')">
-			<b-icon v-if="contract" icon="chevron-up"/>
-			<b-icon v-if="!contract" icon="chevron-down"/>
-		</b-link>
+	<li>
+		Contratos (ordenados de manera cronológica): 
+    <b-link v-if="!iconsHidden" @click="contract = !contract, $emit('contract')">
+      <b-icon v-if="contract" icon="chevron-up"/>
+      <b-icon v-if="!contract" icon="chevron-down"/>
+    </b-link>
 		<ul v-if="contract">
-			<li>Centro/Lugar: {{company.place}}</li>
-			<li>Fecha inicio: {{new Date(company.initDate).toLocaleDateString()}}</li>
-			<li>Fecha Fin: {{new Date(company.finishDate).toLocaleDateString()}}</li>
-			<contract-list-view
-				v-if="company.contracts.length > 0" 
-				:contracts="company.contracts" 
-				:iconsHidden="iconsHidden"
-				@contract="$emit('contract')"
-			/>
+			<div v-for="(contract, secondindex) in contracts" v-bind:key="secondindex">
+        <contract-view
+          :iconsHidden="iconsHidden"
+          :contract="contract"
+          @contract="$emit('contract')"
+        />
+				<!--{{contract.name}}
+        <b-link v-if="!iconsHidden" @click="contracted = !contracted, $emit('contract')">
+          <b-icon v-if="contracted" icon="chevron-up"/>
+          <b-icon v-if="!contracted" icon="chevron-down"/>
+        </b-link>
+				<projects 
+          v-if="contracted" 
+          :projects="contract.projects"
+          :iconsHidden="iconsHidden"
+          @contract="$emit('contract')" 
+        />-->
+			</div>
 		</ul>
 	</li>
 </template>
 
 
 <script lang="ts">
-
-import ContractListView from './ContractListView.vue';
+import ContractView from './ContractView.vue';
 
 export default {
-  name: 'ProfessionalExperienceView',
+  name: 'ContractsView',
   components: {
-	ContractListView
+	ContractView
   },
   props:{
-    company: {
-      type: Object,
-      required: true
-    },
-    token: {
-      type: String,
+    contracts: {
+      type: Array,
       required: true
     },
     iconsHidden: {
@@ -45,8 +49,9 @@ export default {
   },
   data() {
 		return {
-			contract: false
-		}
+      contract: false,
+      contracted: false,
+    }
 	},
 }
 </script>

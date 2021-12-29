@@ -15,6 +15,7 @@
           :content="content"
           :type="type"
           :token="token"
+          :iconsHidden="iconsHidden"
           @editMode="$emit('sizeChange')"
           @hide="hidden"
           @refresh="$emit('refresh')"

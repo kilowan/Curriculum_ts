@@ -1,25 +1,16 @@
 <template>
 	<li>
-		Contratos: 
-    <b-link v-if="!iconsHidden" @click="contract = !contract, $emit('contract')">
-      <b-icon v-if="contract" icon="chevron-up"/>
-      <b-icon v-if="!contract" icon="chevron-down"/>
+    {{contract.name}}
+    <b-link v-if="!iconsHidden" @click="contracted = !contracted, $emit('contract')">
+      <b-icon v-if="contracted" icon="chevron-up"/>
+      <b-icon v-if="!contracted" icon="chevron-down"/>
     </b-link>
-		<ul v-if="contract">
-			<li v-for="(contract, secondindex) in contracts" v-bind:key="secondindex">
-				{{contract.name}}
-        <b-link v-if="!iconsHidden" @click="contracted = !contracted, $emit('contract')">
-          <b-icon v-if="contracted" icon="chevron-up"/>
-          <b-icon v-if="!contracted" icon="chevron-down"/>
-        </b-link>
-				<projects 
-          v-if="contracted" 
-          :projects="contract.projects"
-          :iconsHidden="iconsHidden"
-          @contract="$emit('contract')" 
-        />
-			</li>
-		</ul>
+    <projects 
+      v-if="contracted" 
+      :projects="contract.projects"
+      :iconsHidden="iconsHidden"
+      @contract="$emit('contract')" 
+    />
 	</li>
 </template>
 
@@ -28,13 +19,13 @@
 import Projects from './ProjectsView.vue';
 
 export default {
-  name: 'ContractsView',
+  name: 'ContractView',
   components: {
 	Projects
   },
   props:{
-    contracts: {
-      type: Array,
+    contract: {
+      type: Object,
       required: true
     },
     iconsHidden: {
@@ -44,7 +35,6 @@ export default {
   },
   data() {
 		return {
-      contract: false,
       contracted: false,
     }
 	},
