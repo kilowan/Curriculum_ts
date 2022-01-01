@@ -10,7 +10,9 @@
         <contract-view
           :iconsHidden="iconsHidden"
           :contract="contract"
+          :token="token"
           @contract="$emit('contract')"
+          @refresh="$emit('refresh')"
         />
 				<!--{{contract.name}}
         <b-link v-if="!iconsHidden" @click="contracted = !contracted, $emit('contract')">
@@ -40,6 +42,10 @@ export default {
   props:{
     contracts: {
       type: Array,
+      required: true
+    },
+    token: {
+      type: String,
       required: true
     },
     iconsHidden: {

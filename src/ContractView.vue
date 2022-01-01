@@ -6,11 +6,16 @@
       <b-icon v-if="!contracted" icon="chevron-down"/>
     </b-link>
     <projects 
-      v-if="contracted && contract.projects > 0" 
+      v-if="contracted && contract.projects.length > 0" 
       :projects="contract.projects"
       :iconsHidden="iconsHidden"
       @contract="$emit('contract')" 
     /> <br />
+      <div v-if="add">
+        <input class="m-2" type="text" v-model="projectData" />
+        <b-button class="m-2" @click="save">Guardar</b-button>
+        <b-button class="m-2" @click="cancel">Cancelar</b-button>
+      </div>
     <b-link v-if="!add" @click="add = true">
       <b-icon icon="plus-circle-fill" aria-hidden="true"/> Añadir proyecto
     </b-link>
@@ -20,6 +25,7 @@
 
 <script lang="ts">
 import Projects from './ProjectsView.vue';
+import axios from 'axios';
 
 export default {
   name: 'ContractView',
@@ -31,6 +37,10 @@ export default {
       type: Object,
       required: true
     },
+    token: {
+      type: String,
+      required: true
+    },
     iconsHidden: {
       type: Boolean,
       required: true
@@ -39,8 +49,33 @@ export default {
   data() {
 		return {
       contracted: false,
+      add: false,
+      projectData: '',
     }
 	},
+  methods: {
+    cancel() {
+      this.projectData = '';
+      this.add = false;
+    },
+    async save() {
+      if (this.projectData !== '') {
+        await axios({
+          method: 'post',
+          headers: { Authorization: `Bearer ${this.token}` },
+          url: `http://localhost:8080/api/Project`,
+          data: {
+            name: this.projectData,
+            contractId: this.contract.id,
+          }
+        }).then((data: any) =>{
+          this.projectData = '';
+          this.add = false;
+          this.$emit('refresh');
+        });
+      }
+    }
+  },
 }
 </script>
 
