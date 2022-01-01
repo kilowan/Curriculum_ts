@@ -95,3 +95,7 @@ export interface CurriculumDetail extends ObjectConstructor{
     Infojobs = 2,
     GitHub = 3,
   }
+  export enum ExperienceType {
+    personal = 1,
+    professional = 2
+  }
