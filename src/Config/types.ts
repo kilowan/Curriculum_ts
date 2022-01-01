@@ -25,6 +25,7 @@ export interface CurriculumDetail extends ObjectConstructor{
     fullEmail: string;
   }
   export interface Experience extends ObjectConstructor {
+    id: number;
     name: string;
     type: number;
     place: string;

@@ -12,6 +12,8 @@
 						:token="token" 
 						:company="company"
 						:iconsHidden="iconsHidden"
+						:experienceId="company.id"
+						@refresh="$emit('refresh')"
 						@contract="$emit('contract')" 
 					/>
 				</div>

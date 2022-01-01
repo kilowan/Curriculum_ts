@@ -6,11 +6,14 @@
       <b-icon v-if="!contracted" icon="chevron-down"/>
     </b-link>
     <projects 
-      v-if="contracted" 
+      v-if="contracted && contract.projects > 0" 
       :projects="contract.projects"
       :iconsHidden="iconsHidden"
       @contract="$emit('contract')" 
-    />
+    /> <br />
+    <b-link v-if="!add" @click="add = true">
+      <b-icon icon="plus-circle-fill" aria-hidden="true"/> Añadir proyecto
+    </b-link>
 	</li>
 </template>
 
