@@ -25,6 +25,7 @@ export interface CurriculumDetail extends ObjectConstructor{
     fullEmail: string;
   }
   export interface Experience extends ObjectConstructor {
+    id: number;
     name: string;
     type: number;
     place: string;
@@ -94,4 +95,8 @@ export interface CurriculumDetail extends ObjectConstructor{
     Linkedin = 1,
     Infojobs = 2,
     GitHub = 3,
+  }
+  export enum ExperienceType {
+    personal = 1,
+    professional = 2
   }

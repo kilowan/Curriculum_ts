@@ -15,6 +15,14 @@
 				:iconsHidden="iconsHidden"
 				@contract="$emit('contract')"
 			/>
+			<div v-if="add">
+				<input class="m-2" type="text" v-model="contractData" />
+				<b-button class="m-2" @click="save()">Guardar</b-button>
+				<b-button class="m-2" @click="cancel">Cancelar</b-button>
+			</div>
+			<b-link v-if="!add" @click="add = true">
+				<b-icon icon="plus-circle-fill" aria-hidden="true"/> Añadir contrato
+			</b-link>
 		</ul>
 	</li>
 </template>
@@ -23,6 +31,7 @@
 <script lang="ts">
 
 import ContractListView from './ContractListView.vue';
+import axios from 'axios';
 
 export default {
   name: 'ProfessionalExperienceView',
@@ -42,12 +51,37 @@ export default {
       type: Boolean,
       required: true
     },
+    experienceId: {
+      type: Number,
+      required: true
+    },
   },
   data() {
 		return {
-			contract: false
+			contract: false,
+			add: false,
+			contractData: '',
 		}
 	},
+	methods: {
+		async save() {
+		if (this.contractData !== '') {
+			await axios({
+			method: 'post',
+			headers: { Authorization: `Bearer ${this.token}` },
+			url: `http://localhost:8080/api/Contract`,
+			data: {
+				contractName: this.contractData,
+				experienceId: this.experienceId,
+			}
+			}).then((data: any) =>{
+				this.contractData = '';
+				this.add = false;
+				this.$emit('refresh');
+			});
+		}
+		}
+	}
 }
 </script>
 

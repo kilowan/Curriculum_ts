@@ -12,12 +12,34 @@
 						:token="token" 
 						:company="company"
 						:iconsHidden="iconsHidden"
+						:experienceId="company.id"
+						@refresh="$emit('refresh')"
 						@contract="$emit('contract')" 
 					/>
 				</div>
+				<b-link @click="$bvModal.show('add-experience')">
+					<b-icon icon="plus-circle-fill" aria-hidden="true"/> Añadir experiencia
+				</b-link>
 			</ul>
 		</dd>
 		<dd class="clear"></dd>
+		<b-modal 
+			:id="'add-experience'" 
+			title="Añadir Experiencia"
+			ok-title="Guardar"
+			@ok="save"
+			@cancel="cancel"
+		>
+			<label>Nombre</label> <input type="text" v-model="experienceNew" /> <br />
+			<label>Centro/Lugar:</label> <input type="text" v-model="place" /> <br />
+			<label>Tipo</label> <b-form-select :options="options()" v-model="typeSelected"></b-form-select> <br />
+			<label>Fecha de inicio</label> <input type="date"
+				v-model="initDate"
+				min="2015-01-01" max="2030-12-31"> <br />
+			<label>Fecha de fin</label> <input type="date"
+				v-model="finishDate"
+				min="2015-01-01" max="2030-12-31"> <br />
+		</b-modal>
 	</div>
 </template>
 
@@ -25,6 +47,8 @@
 <script lang="ts">
 
 import ProfessionalExperienceView from './ProfessionalExperienceView.vue';
+import axios from 'axios';
+//import { ExperienceType } from './Config/types';
 
 export default {
   name: 'ProfessionalExperienceListView',
@@ -33,6 +57,10 @@ export default {
   },
   props:{
     experience: {
+      type: Array,
+      required: true
+    },
+    curriculumId: {
       type: Array,
       required: true
     },
@@ -47,8 +75,55 @@ export default {
   },
   data() {
 		return {
-			hide: false
+			hide: false,
+			add: false,
+			experienceNew: '',
+			typeSelected: 1,
+			initDate: '2021-12-08',
+			finishDate: '2021-12-08',
+			place: '',
 		}
+	},
+	methods: {
+		cancel() {
+          this.experienceNew = '';
+		  this.initDate = '2021-12-08';
+		  this.finishDate = '2021-12-08'
+		  this.place = '';
+		  this.typeSelected = 1;
+          this.add = false;
+		},
+		options: function() {
+			return [
+					{ value: 1, text: 'personal' },
+					{ value: 2, text: 'professional' }
+				];
+		},
+    async save() {
+      if (this.experienceNew !== '') {
+        await axios({
+          method: 'post',
+          headers: { Authorization: `Bearer ${this.token}` },
+          url: `http://localhost:8080/api/Experience`,
+          data: {
+			curriculumId: this.curriculumId,
+            name: this.experienceNew,
+			initDate: this.initDate,
+			finishDate: this.finishDate,
+			place: this.place,
+			type: this.typeSelected
+          }
+        }).then((data: any) =>{
+          this.experienceNew = '';
+		  this.initDate = '2021-12-08';
+		  this.finishDate = '2021-12-08'
+		  this.place = '';
+		  this.typeSelected = 1;
+          this.add = false;
+          this.$emit('refresh');
+        });
+      }
+    }
 	},
 }
 </script>

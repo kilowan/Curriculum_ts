@@ -23,11 +23,13 @@
 		<div class="clear">{{EditMode('')}}</div>	
 		<dl>
 			<professional-experience-list-view 
-				v-if="data.experience.length > 0"  
-				:token="token" 
+				v-if="data.experience.length > 0"
+				:token="token"
 				:experience="data.experience"
 				:iconsHidden="iconsHidden"
-				@contract="EditMode" 
+				:curriculumId="curriculumId"
+				@contract="EditMode"
+				@refresh="getCurriculum(curriculumId)"
 			/>
 			<academic-training-list-view 
 				v-if="data.academicTraining.length > 0" 
