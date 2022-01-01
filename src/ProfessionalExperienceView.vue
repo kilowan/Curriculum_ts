@@ -13,7 +13,9 @@
 				v-if="company.contracts.length > 0" 
 				:contracts="company.contracts" 
 				:iconsHidden="iconsHidden"
+				:token="token"
 				@contract="$emit('contract')"
+				@refresh="$emit('refresh')"
 			/>
 			<div v-if="add">
 				<input class="m-2" type="text" v-model="contractData" />

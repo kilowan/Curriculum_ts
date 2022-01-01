@@ -34,10 +34,12 @@ export interface CurriculumDetail extends ObjectConstructor{
     contracts: Array<Contract>;
   }
   export interface Contract extends ObjectConstructor {
+    id: number;
     name: string;
     projects: Array<Project>;
   }
   export interface Project extends ObjectConstructor {
+    id: number;
     name: string;
     descriptionList: Array<string>;
   }
