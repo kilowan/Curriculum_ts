@@ -102,3 +102,7 @@ export interface CurriculumDetail extends ObjectConstructor{
     personal = 1,
     professional = 2
   }
+  export enum TrainingType {
+    academic = 1,
+    other = 2
+  }
