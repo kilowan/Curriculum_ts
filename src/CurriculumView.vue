@@ -36,6 +36,7 @@
 				:token="token" 
 				:academicTraining="data.academicTraining"
 				:iconsHidden="iconsHidden"
+				:curriculumId="curriculumId"
 				@sizeChange="EditMode"
 				@refresh="getCurriculum(curriculumId)" 
 			/>
