@@ -14,17 +14,6 @@
           @contract="$emit('contract')"
           @refresh="$emit('refresh')"
         />
-				<!--{{contract.name}}
-        <b-link v-if="!iconsHidden" @click="contracted = !contracted, $emit('contract')">
-          <b-icon v-if="contracted" icon="chevron-up"/>
-          <b-icon v-if="!contracted" icon="chevron-down"/>
-        </b-link>
-				<projects 
-          v-if="contracted" 
-          :projects="contract.projects"
-          :iconsHidden="iconsHidden"
-          @contract="$emit('contract')" 
-        />-->
 			</div>
 		</ul>
 	</li>

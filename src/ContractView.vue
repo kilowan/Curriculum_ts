@@ -1,16 +1,22 @@
 <template>
 	<li>
-    {{contract.name}}
+    {{ contract.name }}
     <b-link v-if="!iconsHidden" @click="contracted = !contracted, $emit('contract')">
       <b-icon v-if="contracted" icon="chevron-up"/>
       <b-icon v-if="!contracted" icon="chevron-down"/>
     </b-link>
-    <projects 
-      v-if="contracted && contract.projects.length > 0" 
-      :projects="contract.projects"
-      :iconsHidden="iconsHidden"
-      @contract="$emit('contract')" 
-    /> <br />
+    <ul v-if="contract.projects.length > 0">
+      <div>
+        <project-list-view
+          v-if="contracted" 
+          :projects="contract.projects"
+          :iconsHidden="iconsHidden"
+          :token="token"
+          @contract="$emit('contract')"
+          @refresh="$emit('refresh')"
+        />
+      </div>
+    </ul>
       <div v-if="add">
         <input class="m-2" type="text" v-model="projectData" />
         <b-button class="m-2" @click="save">Guardar</b-button>
@@ -24,13 +30,13 @@
 
 
 <script lang="ts">
-import Projects from './ProjectsView.vue';
+import ProjectListView from './ProjectListView.vue';
 import axios from 'axios';
 
 export default {
   name: 'ContractView',
   components: {
-	Projects
+	ProjectListView
   },
   props:{
     contract: {
