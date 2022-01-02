@@ -1,24 +1,40 @@
 <template>
-<div>
-	{{project.name}}
-	<b-link v-if="!iconsHidden" @click="contract = !contract, $emit('contract')">
+<li>
+	{{ project.name }}
+	<b-link v-if="!iconsHidden && project.descriptionList.length >0" @click="contract = !contract, $emit('contract')">
 		<b-icon v-if="contract" icon="chevron-up"/>
 		<b-icon v-if="!contract" icon="chevron-down"/>
 	</b-link>
 	<ul v-if="contract">
 		<li v-for="(description, fourthindex) in project.descriptionList" v-bind:key="fourthindex">{{description}}</li>
 	</ul>
-</div>
+  <div v-if="add">
+    <input class="m-2" type="text" v-model="description" />
+    <b-button class="m-2" @click="save">Guardar</b-button>
+    <b-button class="m-2" @click="cancel">Cancelar</b-button>
+  </div>
+  <b-link v-if="!add && contract" @click="add = true">
+    <b-icon icon="plus-circle-fill" aria-hidden="true"/> Añadir descripción
+  </b-link>
+  <b-link v-if="!add && !contract" @click="add = true">
+    <br /><b-icon icon="plus-circle-fill" aria-hidden="true"/> Añadir descripción
+  </b-link>
+</li>
 </template>
 
 
 <script lang="ts">
+import axios from 'axios';
 
 export default {
   name: 'ProjectView',
   props:{
     project: {
       type: Object,
+      required: true
+    },
+    token: {
+      type: String,
       required: true
     },
     iconsHidden: {
@@ -29,8 +45,33 @@ export default {
   data() {
 		return {
 			contract: false,
+      add: false,
+      description: '',
 		}
 	},
+  methods: {
+    cancel() {
+      this.description = '';
+      this.add = false;
+    },
+    async save() {
+      if (this.description !== '') {
+        await axios({
+          method: 'post',
+          headers: { Authorization: `Bearer ${this.token}` },
+          url: `http://localhost:8080/api/Description`,
+          data: {
+            name: this.description,
+            projectId: this.project.id,
+          }
+        }).then((data: any) =>{
+          this.description = '';
+          this.add = false;
+          this.$emit('refresh');
+        });
+      }
+    }
+  }
 }
 </script>
 

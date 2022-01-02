@@ -1,22 +1,22 @@
 <template>
-	<ul>
-		<li>
-			Proyectos:
-			<b-link v-if="!iconsHidden" @click="contract = !contract, $emit('contract')">
-				<b-icon v-if="contract" icon="chevron-up"/>
-				<b-icon v-if="!contract" icon="chevron-down"/>
-			</b-link>
-			<ul v-if="contract">
-				<li v-for="(project, thirdindex) in projects" v-bind:key="thirdindex">
-					<project-view 
-						:project="project"
-						:iconsHidden="iconsHidden"
-						@contract="$emit('contract')"
-					/>
-				</li>
-			</ul>
-		</li>
-	</ul>
+	<li>
+		Proyectos:
+		<b-link v-if="!iconsHidden && projects.length >0" @click="contract = !contract, $emit('contract')">
+			<b-icon v-if="contract" icon="chevron-up"/>
+			<b-icon v-if="!contract" icon="chevron-down"/>
+		</b-link>
+		<ul v-if="contract">
+			<div v-for="(project, thirdindex) in projects" v-bind:key="thirdindex">
+				<project-view 
+					:project="project"
+					:iconsHidden="iconsHidden"
+					:token="token"
+					@contract="$emit('contract')"
+					@refresh="$emit('refresh')"
+				/>
+			</div>
+		</ul>
+	</li>
 </template>
 
 
@@ -24,13 +24,17 @@
 import ProjectView from './ProjectView.vue';
 
 export default {
-  name: 'ProjectsView',
+  name: 'ProjectListView',
   components:{
 	  ProjectView,
   },
   props:{
     projects: {
       type: Array,
+      required: true
+    },
+    token: {
+      type: String,
       required: true
     },
     iconsHidden: {
@@ -47,7 +51,7 @@ export default {
 }
 </script>
 
-<style>
+<!--<style>
 * { margin: 0; padding: 0; }
 body { font: 16px Helvetica, Sans-Serif; line-height: 24px; background: url(./images/noise.jpg); }
 .clear { clear: both; }
@@ -74,5 +78,5 @@ dd.clear { float: none; margin: 0; height: 15px; }
     margin:2%;
 	border-style: groove; border-width: 1px;
   }
-</style>
+</style>-->
 
