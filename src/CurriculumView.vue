@@ -40,11 +40,12 @@
 				@sizeChange="EditMode"
 				@refresh="getCurriculum(curriculumId)" 
 			/>
-			<complementary-experience-list-view 
+			<skill-list-view 
 				v-if="data.otherTraining.length > 0" 
 				:token="token"  
 				:otherTraining="data.otherTraining"
 				:iconsHidden="iconsHidden"
+				:curriculumId="curriculumId"
 				@sizeChange="EditMode"
 				@contract="EditMode" 
 				@refresh="getCurriculum(curriculumId)" 
@@ -73,7 +74,7 @@
 import  AcademicTrainingListView from './AcademicTrainingListView.vue';
 import  OtherListView from './OtherListView.vue';
 import ProfessionalExperienceListView from './ProfessionalExperienceListView.vue';
-import ComplementaryExperienceListView from './ComplementaryExperienceListView.vue';
+import SkillListView from './SkillListView.vue';
 import LanguageListView from './LanguageListView.vue';
 import SocialMediaListView from './SocialMediaListView.vue';
 import axios from 'axios';
@@ -85,7 +86,7 @@ export default {
 	AcademicTrainingListView,
 	OtherListView,
 	ProfessionalExperienceListView,
-	ComplementaryExperienceListView,
+	SkillListView,
 	LanguageListView,
 	SocialMediaListView
   },

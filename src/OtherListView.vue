@@ -8,10 +8,6 @@
 		<dd id="other" v-if="other">
 			<ul>
 				<div v-for="(otherData, firstindex) in other" v-bind:key="firstindex">
-					<!--{{otherData.name}}
-					<ul v-if="otherData.values.length > 0">
-						<li v-for="(value, secondindex) in otherData.values" v-bind:key="secondindex">{{value}}</li>
-					</ul>-->
           <other-view
             :otherData="otherData"
             :token="token"
