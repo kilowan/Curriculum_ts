@@ -16,14 +16,28 @@
           />
 				</div>
 			</ul>
+			<b-link @click="$bvModal.show('add-language')">
+				<b-icon icon="plus-circle-fill" aria-hidden="true"/> Añadir idioma
+			</b-link>
 		</dd>
     <dd class="clear"></dd>
+		<b-modal
+			:id="'add-language'"
+			title="Añadir Experiencia"
+			ok-title="Guardar"
+			@ok="save"
+			@cancel="cancel"
+		>
+      <label>Nombre</label> <input type="text" v-model="languageNew" /> <br />
+      <label>Nivel</label> <b-form-select :options="languageLevelList" v-model="typeSelected" /> <br />
+		</b-modal>
 	</div>
 </template>
 
 
 <script lang="ts">
 import LanguageView from './LanguageView.vue';
+import axios from 'axios';
 
 export default {
   name: 'AcademicTrainingView',
@@ -35,6 +49,10 @@ export default {
       type: Array,
       required: true
     },
+    curriculumId: {
+      type: Number,
+      required: true
+    },
     token: {
       type: String,
       required: true
@@ -44,23 +62,57 @@ export default {
       required: true
     },
   },
+  data() {
+		return {
+      hide: false,
+      add: false,
+      counter: 0,
+      languageNew: '',
+      languageLevelList: [],
+      typeSelected: 0,
+    }
+	},
   methods: {
-    hiden(){
+    hiden() {
       this.counter--;
       if (this.counter == 0) {
         this.hide = true;
       }
       this.$emit('sizeChange');
     },
+		cancel() {
+			this.languageNew = '';
+			this.add = false;
+		},
+		async save() {
+			if (this.languageNew !== '') {
+				await axios({
+				method: 'post',
+				headers: { Authorization: `Bearer ${this.token}` },
+				url: `http://localhost:8080/api/Language`,
+				data: {
+					name: this.languageNew,
+					curriculumId: this.curriculumId,
+					levelId: this.typeSelected,
+				}
+				}).then((data: any) =>{
+					this.cancel();
+					this.$emit('refresh');
+				});
+			}
+		}
   },
-  data() {
-		return {
-      hide: false,
-      counter: 0,
-    }
-	},
-  mounted(){
+  async mounted() {
     this.counter = this.languageList.length;
+    await axios({
+    method: 'get',
+    headers: { Authorization: `Bearer ${this.token}` },
+    url: `http://localhost:8080/api/LanguageLevel`
+    }).then((data: any) => {
+      this.languageLevelList = data.data.map((lang: any) => {
+        return { value: lang.id, text: lang.name };
+      });
+    });
   },
 }
 </script>
