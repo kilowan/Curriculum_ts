@@ -61,10 +61,12 @@
 			/>			
 			<other-list-view
 				v-if="data.otherData"  
-				:token="token"  
+				:token="token"
+				:curriculumId="curriculumId"
 				:other="data.otherData"
 				:iconsHidden="iconsHidden"
 				@sizeChange="EditMode"
+				@refresh="getCurriculum(curriculumId)"
 			/>
 		</dl>
 		<dd class="clear"></dd>

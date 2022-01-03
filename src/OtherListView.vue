@@ -17,6 +17,14 @@
           />
 				</div>
 			</ul>
+			<div v-if="add">
+				<input type="text" v-model="otherNew" />
+				<b-button class="m-2" @click="save">Guardar</b-button>
+				<b-button class="m-2" @click="cancel">Cancelar</b-button>
+			</div>
+			<b-link v-if="!iconsHidden" @click="add = true">
+				<b-icon icon="plus-circle-fill" aria-hidden="true"/> Añadir Otros Datos
+			</b-link>
 		</dd>
     <dd class="clear"></dd>
 	</div>
@@ -25,6 +33,7 @@
 
 <script lang="ts">
 import otherView from './OtherView.vue';
+import axios from 'axios';
 
 export default {
   name: 'OtherListView',
@@ -34,6 +43,10 @@ export default {
   props:{
     other: {
       type: Array,
+      required: true
+    },
+    curriculumId: {
+      type: Number,
       required: true
     },
     token: {
@@ -48,7 +61,9 @@ export default {
   data() {
 		return {
       hide: false,
+      add: false,
       counter: 0,
+      otherNew: '',
     }
 	},
   methods: {
@@ -59,6 +74,27 @@ export default {
       }
       this.$emit('sizeChange');
     },
+		cancel() {
+			this.otherNew = '';
+			this.add = false;
+		},
+		async save() {
+      debugger;
+			if (this.otherNew !== '') {
+				await axios({
+				method: 'post',
+				headers: { Authorization: `Bearer ${this.token}` },
+				url: `http://localhost:8080/api/OtherData`,
+				data: {
+					name: this.otherNew,
+					curriculumId: this.curriculumId,
+				}
+				}).then((data: any) =>{
+					this.cancel();
+					this.$emit('refresh');
+				});
+			}
+		}
   },
   mounted(){
     this.counter = this.other.length;
