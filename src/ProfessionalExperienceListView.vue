@@ -17,10 +17,10 @@
 						@contract="$emit('contract')" 
 					/>
 				</div>
-				<b-link @click="$bvModal.show('add-experience')">
-					<b-icon icon="plus-circle-fill" aria-hidden="true"/> Añadir experiencia
-				</b-link>
 			</ul>
+			<b-link @click="$bvModal.show('add-experience')">
+				<b-icon icon="plus-circle-fill" aria-hidden="true"/> Añadir experiencia
+			</b-link>
 		</dd>
 		<dd class="clear"></dd>
 		<b-modal 

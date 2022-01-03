@@ -8,7 +8,7 @@
 		<dd id="complementary" v-if="otherTraining">
 			<ul>
 				<div v-for="(otherTrainingData, firstindex) in otherTraining" v-bind:key="firstindex">
-					<complementary-experience-view 
+					<skill-view
 						:token="token" 
 						:otherTrainingData="otherTrainingData"
 						:iconsHidden="iconsHidden"
@@ -18,24 +18,36 @@
 					/>
 				</div>
 			</ul>
+			<div v-if="add">
+				<input type="text" v-model="trainingNew" />
+				<b-button class="m-2" @click="save">Guardar</b-button>
+				<b-button class="m-2" @click="cancel">Cancelar</b-button>
+			</div>
+			<b-link @click="add = true">
+				<b-icon icon="plus-circle-fill" aria-hidden="true"/> Añadir Skills
+			</b-link>
 		</dd>
 		<dd class="clear"></dd>
 	</div>
 </template>
 
-
 <script lang="ts">
-import ComplementaryExperienceView from './ComplementaryExperienceView.vue';
+import SkillView from './SkillView.vue';
 import { ContentType } from './Config/types'
+import axios from 'axios';
 
 export default {
   name: 'ComplementaryExperienceListView',
   components: {
-    ComplementaryExperienceView
+    SkillView
   },
   props:{
     otherTraining: {
       type: Array,
+      required: true
+    },
+    curriculumId: {
+      type: Number,
       required: true
     },
     token: {
@@ -52,6 +64,8 @@ export default {
 			ContentType: ContentType,
 			hide: false,
 			counter: 0,
+			trainingNew: '',
+			add: false,
 		}
 	},
 	methods: {
@@ -62,6 +76,27 @@ export default {
 			}
 			this.$emit('sizeChange');
 		},
+		cancel() {
+			this.trainingNew = '';
+			this.add = false;
+		},
+		async save() {
+		if (this.trainingNew !== '') {
+			await axios({
+			method: 'post',
+			headers: { Authorization: `Bearer ${this.token}` },
+			url: `http://localhost:8080/api/Training`,
+			data: {
+				name: this.trainingNew,
+				curriculumId: this.curriculumId,
+				type: 2,
+			}
+			}).then((data: any) =>{
+				this.cancel();
+				this.$emit('refresh');
+			});
+		}
+		}
 	},
 	mounted(){
 		this.counter = this.otherTraining.length;
