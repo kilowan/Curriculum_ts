@@ -18,7 +18,7 @@
 					/>
 				</div>
 			</ul>
-			<b-link @click="$bvModal.show('add-experience')">
+			<b-link v-if="!iconsHidden" @click="$bvModal.show('add-experience')">
 				<b-icon icon="plus-circle-fill" aria-hidden="true"/> Añadir experiencia
 			</b-link>
 		</dd>

@@ -16,7 +16,7 @@
           />
 				</div>
 			</ul>
-			<b-link @click="$bvModal.show('add-language')">
+			<b-link v-if="!iconsHidden" @click="$bvModal.show('add-language')">
 				<b-icon icon="plus-circle-fill" aria-hidden="true"/> Añadir idioma
 			</b-link>
 		</dd>

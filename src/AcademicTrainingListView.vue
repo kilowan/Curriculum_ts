@@ -18,7 +18,7 @@
           />
 				</div>
 			</ul>
-    <b-link @click="$bvModal.show('add-training')">
+    <b-link v-if="!iconsHidden" @click="$bvModal.show('add-training')">
       <b-icon icon="plus-circle-fill" aria-hidden="true"/> Añadir formación
     </b-link>
 		</dd>
