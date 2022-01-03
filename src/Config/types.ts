@@ -63,9 +63,13 @@ export interface CurriculumDetail extends ObjectConstructor{
     name: string;
     id: number;
   }
-  export interface Language extends ObjectConstructor {
+  export interface Language {
     name: string;
-    level: string;
+    level: LanguageLevel;
+  }
+  export interface LanguageLevel {
+    id: number;
+    name: string;
   }
   export interface SocialMedia extends ObjectConstructor {
     name: string;

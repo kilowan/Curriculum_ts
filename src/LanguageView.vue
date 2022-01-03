@@ -1,6 +1,6 @@
 <template>
 	<li v-if="!hide">
-    <strong>{{ language.name }}:</strong> {{ language.level }}
+    <strong>{{ language.name }}:</strong> {{ language.level.name }}
     <b-link v-if="!iconsHidden" @click="hide = true, $emit('hide')">
       <b-icon icon="eye-slash-fill"/>
     </b-link>

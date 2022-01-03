@@ -24,7 +24,7 @@
 				<b-button class="m-2" @click="cancel">Cancelar</b-button>
 			</div>
 			<b-link @click="add = true">
-				<b-icon icon="plus-circle-fill" aria-hidden="true"/> Añadir Skills
+				<b-icon icon="plus-circle-fill" aria-hidden="true"/> Añadir Skill
 			</b-link>
 		</dd>
 		<dd class="clear"></dd>
@@ -81,21 +81,21 @@ export default {
 			this.add = false;
 		},
 		async save() {
-		if (this.trainingNew !== '') {
-			await axios({
-			method: 'post',
-			headers: { Authorization: `Bearer ${this.token}` },
-			url: `http://localhost:8080/api/Training`,
-			data: {
-				name: this.trainingNew,
-				curriculumId: this.curriculumId,
-				type: 2,
+			if (this.trainingNew !== '') {
+				await axios({
+				method: 'post',
+				headers: { Authorization: `Bearer ${this.token}` },
+				url: `http://localhost:8080/api/Training`,
+				data: {
+					name: this.trainingNew,
+					curriculumId: this.curriculumId,
+					type: 2,
+				}
+				}).then((data: any) =>{
+					this.cancel();
+					this.$emit('refresh');
+				});
 			}
-			}).then((data: any) =>{
-				this.cancel();
-				this.$emit('refresh');
-			});
-		}
 		}
 	},
 	mounted(){

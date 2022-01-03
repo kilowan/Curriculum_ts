@@ -54,8 +54,10 @@
 				v-if="data.languageList.length > 0" 
 				:token="token" 
 				:languageList="data.languageList"
+				:curriculumId="curriculumId"
 				:iconsHidden="iconsHidden"
 				@sizeChange="EditMode"
+				@refresh="getCurriculum(curriculumId)"
 			/>			
 			<other-list-view
 				v-if="data.otherData"  
