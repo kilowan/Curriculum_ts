@@ -1,33 +1,58 @@
 <template>
-	<li v-if="!hide">		
-		<strong>{{otherTrainingData.name}}</strong>
-		<b-link v-if="!iconsHidden" @click="hide = true, $emit('hide')">
-			<b-icon icon="eye-slash-fill"/>
-		</b-link>
-		<b-link v-if="!iconsHidden" @click="contract = !contract, $emit('sizeChange')">
-			<b-icon v-if="contract" icon="chevron-up"/>
-			<b-icon v-if="!contract" icon="chevron-down"/>
-		</b-link>
-		<ul v-if="contract">
-			<div>
-				<contents-view 
-					:type="ContentType.complementary" 
-					:contents="otherTrainingData.contents" 
-					:token="token" 
-					:trainingId="otherTrainingData.id"
-					:iconsHidden="iconsHidden"
-					@sizeChange="$emit('sizeChange')"
-					@refresh="$emit('refresh')"
-				/>
-			</div>
-		</ul>
-	</li>
+	<div>
+		<li v-if="!hide">
+			<strong>{{otherTrainingData.name}}</strong>
+			<b-link v-if="!iconsHidden" @click="hide = true, $emit('hide')">
+				<b-icon icon="eye-slash-fill"/>
+			</b-link>
+			<b-link v-if="!iconsHidden" @click="contract = !contract, $emit('sizeChange')">
+				<b-icon v-if="contract" icon="chevron-up"/>
+				<b-icon v-if="!contract" icon="chevron-down"/>
+			</b-link>
+			<b-link v-if="!iconsHidden" @click="$bvModal.show(`edit-skill-${otherTrainingData.id}`)">
+				<b-icon icon="pencil-square" aria-hidden="true"/>
+			</b-link>
+			<ul v-if="contract">
+				<div>
+					<contents-view
+						:type="ContentType.complementary"
+						:contents="otherTrainingData.contents"
+						:token="token"
+						:trainingId="otherTrainingData.id"
+						:iconsHidden="iconsHidden"
+						@sizeChange="$emit('sizeChange')"
+						@refresh="$emit('refresh')"
+					/>
+				</div>
+				<div v-if="add">
+					<input class="m-2" type="text" v-model="element" />
+					<b-button class="m-2" @click="save">Guardar</b-button>
+					<b-button class="m-2" @click="cancel">Cancelar</b-button>
+				</div>
+				<b-link v-if="!iconsHidden" @click="add = true">
+					<b-icon icon="plus-circle-fill" aria-hidden="true"/> Añadir contenido
+				</b-link>
+			</ul>
+		</li>
+		<b-modal 
+		:id="`edit-skill-${otherTrainingData.id}`" 
+		title="Editar skill"
+		ok-title="Guardar"
+		@ok="update"
+		@cancel="cancel"
+		>
+		<div style="text-align: center; margin: 0 auto; width:380px;">
+			<input class="m-2" type="text" v-model="otherTrainingData.name" />
+		</div>
+		</b-modal>
+	</div>
 </template>
 
 
 <script lang="ts">
 import ContentsView from './ContentsView.vue';
 import { ContentType } from './Config/types'
+import axios from 'axios';
 
 export default {
   name: 'ComplementaryExperienceView',
@@ -36,7 +61,7 @@ export default {
   },
   props:{
     otherTrainingData: {
-      type: Array,
+      type: Object,
       required: true
     },
     token: {
@@ -53,8 +78,47 @@ export default {
 			ContentType: ContentType,
 			contract: false,
 			hide: false,
+			add: false,
+			element: '',
 		}
 	},
+	methods: {
+		cancel() {
+			this.element = '';
+			this.add = false;
+		},
+		async save() {
+			if (this.element !== '') {
+				await axios({
+				method: 'post',
+				headers: { Authorization: `Bearer ${this.token}` },
+				url: `http://localhost:8080/api/Content`,
+				data: {
+					name: this.element,
+					trainingId: this.otherTrainingData.id,
+				}
+				}).then((data: any) =>{
+				this.element = '';
+				this.add = false;
+				this.$emit('refresh');
+				});
+			}
+		},
+		async update() {
+			await axios({
+			method: 'put',
+			headers: { Authorization: `Bearer ${this.token}` },
+			url: `http://localhost:8080/api/Training/${this.otherTrainingData.id}`,
+			data: {
+				name: this.otherTrainingData.name
+			}
+			}).then((data: any) =>{
+			this.element = '';
+			this.add = false;
+			this.$emit('refresh');
+			});
+		},
+	}
 }
 </script>
 

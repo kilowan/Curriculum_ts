@@ -89,8 +89,8 @@ export default {
 	},
 	methods: {
 		cancel() {
-		this.element = '';
-		this.add = false;
+			this.element = '';
+			this.add = false;
 		},
 		async save() {
 			if (this.element !== '') {
