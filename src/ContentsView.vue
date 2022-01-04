@@ -1,5 +1,5 @@
 <template>
-	<li v-if="!hide">	
+	<li v-if="!hide && contents.length > 0">	
 		<strong class="m-2">Contenido:</strong>
     <b-link 
       v-if="!iconsHidden" class="m-2" 
