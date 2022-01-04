@@ -1,35 +1,65 @@
 <template>
-	<li v-if="!hide">		
-		{{company.name}}
-		<b-link v-if="!iconsHidden" @click="contract = !contract, $emit('contract')">
-			<b-icon v-if="contract" icon="chevron-up"/>
-			<b-icon v-if="!contract" icon="chevron-down"/>
-		</b-link>
-		<b-link v-if="!iconsHidden" @click="hide = true, $emit('hide')">
-			<b-icon icon="eye-slash-fill"/>
-		</b-link>
-		<ul v-if="contract">
-			<li>Centro/Lugar: {{company.place}}</li>
-			<li>Fecha inicio: {{new Date(company.initDate).toLocaleDateString()}}</li>
-			<li>Fecha Fin: {{new Date(company.finishDate).toLocaleDateString()}}</li>
-			<contract-list-view
-				v-if="company.contracts.length > 0" 
-				:contracts="company.contracts" 
-				:iconsHidden="iconsHidden"
-				:token="token"
-				@contract="$emit('contract')"
-				@refresh="$emit('refresh')"
-			/>
-			<div v-if="add">
-				<input class="m-2" type="text" v-model="contractData" />
-				<b-button class="m-2" @click="save()">Guardar</b-button>
-				<b-button class="m-2" @click="cancel">Cancelar</b-button>
-			</div>
-			<b-link v-if="!add && !iconsHidden" @click="add = true">
-				<b-icon icon="plus-circle-fill" aria-hidden="true"/> Añadir contrato
+	<div>
+		<li v-if="!hide">
+			{{company.name}}
+			<b-link v-if="!iconsHidden" @click="contract = !contract, $emit('contract')">
+				<b-icon v-if="contract" icon="chevron-up"/>
+				<b-icon v-if="!contract" icon="chevron-down"/>
 			</b-link>
-		</ul>
-	</li>
+			<b-link v-if="!iconsHidden" @click="hide = true, $emit('hide')">
+				<b-icon icon="eye-slash-fill"/>
+			</b-link>
+			<ul v-if="contract">
+			<li>
+				<b-link v-if="!iconsHidden" @click="$bvModal.show(`edit-experience-${experienceId}`)">
+					Centro/Lugar: {{company.place}}
+				</b-link>
+			</li>
+			<li>
+				<b-link v-if="!iconsHidden" @click="$bvModal.show(`edit-experience-${experienceId}`)">
+					Fecha inicio: {{new Date(company.initDate).toLocaleDateString()}}
+				</b-link>
+			</li>
+			<li>
+				<b-link v-if="!iconsHidden" @click="$bvModal.show(`edit-experience-${experienceId}`)">
+					Fecha Fin: {{new Date(company.finishDate).toLocaleDateString()}}
+				</b-link>
+			</li>
+				<contract-list-view
+					v-if="company.contracts.length > 0" 
+					:contracts="company.contracts" 
+					:iconsHidden="iconsHidden"
+					:token="token"
+					@contract="$emit('contract')"
+					@refresh="$emit('refresh')"
+				/>
+				<div v-if="add">
+					<input class="m-2" type="text" v-model="contractData" />
+					<b-button class="m-2" @click="save()">Guardar</b-button>
+					<b-button class="m-2" @click="cancel">Cancelar</b-button>
+				</div>
+				<b-link v-if="!add && !iconsHidden" @click="add = true">
+					<b-icon icon="plus-circle-fill" aria-hidden="true"/> Añadir contrato
+				</b-link>
+			</ul>
+		</li>
+		<b-modal 
+			:id="`edit-experience-${experienceId}`"
+			title="Editar Experiencia"
+			ok-title="Guardar"
+			@ok="update"
+			@cancel="cancel"
+		>
+			<label>Nombre</label> <input type="text" v-model="company.name" /> <br />
+			<label>Centro/Lugar:</label> <input type="text" v-model="company.place" /> <br />
+			<label>Fecha de inicio</label> <b-form-datepicker
+				v-model="company.initDate"
+				min="2015-01-01" max="2030-12-31"></b-form-datepicker> <br />
+			<label>Fecha de fin</label> <b-form-datepicker
+				v-model="company.finishDate"
+				min="2015-01-01" max="2030-12-31"></b-form-datepicker> <br />
+		</b-modal>
+	</div>
 </template>
 
 
@@ -86,6 +116,21 @@ export default {
 					this.$emit('refresh');
 				});
 			}
+		},
+		async update() {
+			await axios({
+			method: 'put',
+			headers: { Authorization: `Bearer ${this.token}` },
+			url: `http://localhost:8080/api/Experience/${this.experienceId}`,
+			data: {
+					name: this.company.name,
+					place: this.company.place,
+					initDate: this.company.initDate,
+					finishDate: this.company.finishDate
+				}
+			}).then((data: any) =>{
+				this.$emit('refresh');
+			});
 		}
 	}
 }
