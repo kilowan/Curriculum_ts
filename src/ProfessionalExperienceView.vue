@@ -1,9 +1,12 @@
 <template>
-	<li>		
+	<li v-if="!hide">		
 		{{company.name}}
 		<b-link v-if="!iconsHidden" @click="contract = !contract, $emit('contract')">
 			<b-icon v-if="contract" icon="chevron-up"/>
 			<b-icon v-if="!contract" icon="chevron-down"/>
+		</b-link>
+		<b-link v-if="!iconsHidden" @click="hide = true, $emit('hide')">
+			<b-icon icon="eye-slash-fill"/>
 		</b-link>
 		<ul v-if="contract">
 			<li>Centro/Lugar: {{company.place}}</li>
@@ -22,7 +25,7 @@
 				<b-button class="m-2" @click="save()">Guardar</b-button>
 				<b-button class="m-2" @click="cancel">Cancelar</b-button>
 			</div>
-			<b-link v-if="!add" @click="add = true">
+			<b-link v-if="!add && !iconsHidden" @click="add = true">
 				<b-icon icon="plus-circle-fill" aria-hidden="true"/> Añadir contrato
 			</b-link>
 		</ul>
@@ -62,26 +65,27 @@ export default {
 		return {
 			contract: false,
 			add: false,
+			hide: false,
 			contractData: '',
 		}
 	},
 	methods: {
 		async save() {
-		if (this.contractData !== '') {
-			await axios({
-			method: 'post',
-			headers: { Authorization: `Bearer ${this.token}` },
-			url: `http://localhost:8080/api/Contract`,
-			data: {
-				contractName: this.contractData,
-				experienceId: this.experienceId,
+			if (this.contractData !== '') {
+				await axios({
+				method: 'post',
+				headers: { Authorization: `Bearer ${this.token}` },
+				url: `http://localhost:8080/api/Contract`,
+				data: {
+					contractName: this.contractData,
+					experienceId: this.experienceId,
+				}
+				}).then((data: any) =>{
+					this.contractData = '';
+					this.add = false;
+					this.$emit('refresh');
+				});
 			}
-			}).then((data: any) =>{
-				this.contractData = '';
-				this.add = false;
-				this.$emit('refresh');
-			});
-		}
 		}
 	}
 }
