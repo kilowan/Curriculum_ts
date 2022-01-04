@@ -1,34 +1,55 @@
 <template>
-	<li v-if="!hide">	
-		{{academic.name}}
-		<b-link v-if="!iconsHidden" @click="contract = !contract, $emit('sizeChange')">
-			<b-icon v-if="contract" icon="chevron-up"/>
-			<b-icon v-if="!contract" icon="chevron-down"/>
-		</b-link>
-		<b-link v-if="!iconsHidden" @click="hide = true, $emit('hide')">
-			<b-icon icon="eye-slash-fill"/>
-		</b-link>
-		<ul v-if="contract">
-			<li>Centro/ Lugar: {{academic.place}}</li>
-			<li v-if="academic.graduationDate">Graduación: {{new Date(academic.graduationDate).getFullYear()}}</li>
-			<div v-if="academic.contents.length >0">
-				<contents-view 
-					:contents="academic.contents" 
-					:type="ContentType.academic" 
-					:token="token" :trainingId="academic.id"
-					:iconsHidden="iconsHidden"
-					@sizeChange="$emit('sizeChange')" 
-					@refresh="$emit('refresh')"
-				/>
+	<div>
+		<li v-if="!hide">
+			{{academic.name}}
+			<b-link v-if="!iconsHidden" @click="contract = !contract, $emit('sizeChange')">
+				<b-icon v-if="contract" icon="chevron-up"/>
+				<b-icon v-if="!contract" icon="chevron-down"/>
+			</b-link>
+			<b-link v-if="!iconsHidden" @click="hide = true, $emit('hide')">
+				<b-icon icon="eye-slash-fill"/>
+			</b-link>
+			<b-link v-if="!iconsHidden" @click="$bvModal.show(`edit-training-${academic.id}`)">
+				<b-icon icon="pencil-square" aria-hidden="true"/>
+			</b-link>
+			<ul v-if="contract">
+				<li>Centro/ Lugar: {{academic.place}}</li>
+				<li v-if="academic.graduationDate">Graduación: {{new Date(academic.graduationDate).getFullYear()}}</li>
+				<div v-if="academic.contents.length >0">
+					<contents-view
+						:contents="academic.contents"
+						:type="ContentType.academic"
+						:token="token" :trainingId="academic.id"
+						:iconsHidden="iconsHidden"
+						@sizeChange="$emit('sizeChange')"
+						@refresh="$emit('refresh')"
+					/>
+				</div>
+			</ul>
+		</li>
+		<b-modal 
+			:id="`edit-training-${academic.id}`"
+			title="Editar Experiencia"
+			ok-title="Guardar"
+			@ok="update"
+			@cancel="cancel"
+		>
+			<label>Nombre:</label> <input type="text" v-model="academic.name" /> <br />
+			<label>Centro/Lugar:</label> <input type="text" v-model="academic.place" /> <br />
+			<div v-if="academic.graduationDate">
+				<label>Graduación:</label> <b-form-datepicker
+				v-model="academic.graduationDate"
+				min="2015-01-01" max="2030-12-31"></b-form-datepicker> <br />
 			</div>
-		</ul>
-	</li>
+		</b-modal>
+	</div>
 </template>
 
 
 <script lang="ts">
 import ContentsView from './ContentsView.vue'
 import { ContentType } from './Config/types'
+import axios from 'axios';
 
 export default {
   name: 'AcademicTrainingView',
@@ -37,7 +58,7 @@ export default {
   },
   props:{
     academic: {
-      type: Array,
+      type: Object,
       required: true
     },
     token: {
@@ -56,6 +77,22 @@ export default {
 			hide: false,
 		}
 	},
+	methods: {
+		async update() {
+			await axios({
+			method: 'put',
+			headers: { Authorization: `Bearer ${this.token}` },
+			url: `http://localhost:8080/api/Training/${this.academic.id}`,
+			data: {
+					name: this.academic.name,
+					place: this.academic.place,
+					graduationDate: this.academic.initDate
+				}
+			}).then((data: any) =>{
+				this.$emit('refresh');
+			});
+		}
+	}
 }
 </script>
 
