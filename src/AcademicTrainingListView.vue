@@ -25,7 +25,7 @@
 		<dd class="clear"></dd>
 		<b-modal 
 			:id="'add-training'"
-			title="Añadir Experiencia"
+			title="Añadir Formación"
 			ok-title="Guardar"
 			@ok="save"
 			@cancel="cancel"
