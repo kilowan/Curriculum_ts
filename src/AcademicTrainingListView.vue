@@ -9,12 +9,12 @@
 			<ul>
 				<div v-for="(academic, firstindex) in academicTraining" v-bind:key="firstindex">
 					<academic-training-view 
-            :academic="academic" 
+            :academic="academic"
             :token="token"
             :iconsHidden="iconsHidden"
             @hide="hidden"
-            @sizeChange="$emit('sizeChange')" 
-            @refresh="$emit('refresh')" 
+            @sizeChange="$emit('sizeChange')"
+            @refresh="$emit('refresh')"
           />
 				</div>
 			</ul>
