@@ -9,22 +9,13 @@
 			<b-link v-if="!iconsHidden" @click="hide = true, $emit('hide')">
 				<b-icon icon="eye-slash-fill"/>
 			</b-link>
+			<b-link v-if="!iconsHidden" @click="$bvModal.show(`edit-experience-${experienceId}`)">
+				<b-icon icon="pencil-square" aria-hidden="true"/>
+			</b-link>
 			<ul v-if="contract">
-			<li>
-				<b-link v-if="!iconsHidden" @click="$bvModal.show(`edit-experience-${experienceId}`)">
-					Centro/Lugar: {{company.place}}
-				</b-link>
-			</li>
-			<li>
-				<b-link v-if="!iconsHidden" @click="$bvModal.show(`edit-experience-${experienceId}`)">
-					Fecha inicio: {{new Date(company.initDate).toLocaleDateString()}}
-				</b-link>
-			</li>
-			<li>
-				<b-link v-if="!iconsHidden" @click="$bvModal.show(`edit-experience-${experienceId}`)">
-					Fecha Fin: {{new Date(company.finishDate).toLocaleDateString()}}
-				</b-link>
-			</li>
+			<li>Centro/Lugar: {{ company.place }}</li>
+			<li>Fecha inicio: {{new Date(company.initDate).toLocaleDateString()}}</li>
+			<li>Fecha Fin: {{new Date(company.finishDate).toLocaleDateString()}}</li>
 				<contract-list-view
 					v-if="company.contracts.length > 0" 
 					:contracts="company.contracts" 

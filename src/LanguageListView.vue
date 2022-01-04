@@ -23,7 +23,7 @@
     <dd class="clear"></dd>
 		<b-modal
 			:id="'add-language'"
-			title="Añadir Experiencia"
+			title="Añadir Idioma"
 			ok-title="Guardar"
 			@ok="save"
 			@cancel="cancel"
