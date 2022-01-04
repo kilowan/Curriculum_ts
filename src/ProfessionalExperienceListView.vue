@@ -14,7 +14,8 @@
 						:iconsHidden="iconsHidden"
 						:experienceId="company.id"
 						@refresh="$emit('refresh')"
-						@contract="$emit('contract')" 
+						@contract="$emit('contract')"
+						@hide="hidden"
 					/>
 				</div>
 			</ul>
@@ -77,6 +78,7 @@ export default {
 		return {
 			hide: false,
 			add: false,
+			counter: 0,
 			experienceNew: '',
 			typeSelected: 1,
 			initDate: '2021-12-08',
@@ -85,6 +87,13 @@ export default {
 		}
 	},
 	methods: {
+		hidden() {
+			this.counter--;
+			if (this.counter == 0) {
+				this.hide = true;
+			}
+			this.$emit('contract');
+		},
 		cancel() {
           this.experienceNew = '';
 		  this.initDate = '2021-12-08';
@@ -99,32 +108,35 @@ export default {
 					{ value: 2, text: 'professional' }
 				];
 		},
-    async save() {
-      if (this.experienceNew !== '') {
-        await axios({
-          method: 'post',
-          headers: { Authorization: `Bearer ${this.token}` },
-          url: `http://localhost:8080/api/Experience`,
-          data: {
-			curriculumId: this.curriculumId,
-            name: this.experienceNew,
-			initDate: this.initDate,
-			finishDate: this.finishDate,
-			place: this.place,
-			type: this.typeSelected
-          }
-        }).then((data: any) =>{
-          this.experienceNew = '';
-		  this.initDate = '2021-12-08';
-		  this.finishDate = '2021-12-08'
-		  this.place = '';
-		  this.typeSelected = 1;
-          this.add = false;
-          this.$emit('refresh');
-        });
-      }
-    }
+		async save() {
+			if (this.experienceNew !== '') {
+				await axios({
+					method: 'post',
+					headers: { Authorization: `Bearer ${this.token}` },
+					url: `http://localhost:8080/api/Experience`,
+					data: {
+					curriculumId: this.curriculumId,
+					name: this.experienceNew,
+					initDate: this.initDate,
+					finishDate: this.finishDate,
+					place: this.place,
+					type: this.typeSelected
+					}
+				}).then((data: any) =>{
+					this.experienceNew = '';
+					this.initDate = '2021-12-08';
+					this.finishDate = '2021-12-08'
+					this.place = '';
+					this.typeSelected = 1;
+					this.add = false;
+					this.$emit('refresh');
+				});
+			}
+		}
 	},
+	mounted() {
+		this.counter = this.experience.length;
+	}
 }
 </script>
 
