@@ -21,14 +21,6 @@
           @refresh="$emit('refresh')"
         />
 			</div>
-      <div v-if="add">
-        <input class="m-2" type="text" v-model="element" />
-        <b-button class="m-2" @click="save">Guardar</b-button>
-        <b-button class="m-2" @click="cancel">Cancelar</b-button>
-      </div>
-      <b-link v-if="editMode" @click="add = true">
-        <b-icon icon="plus-circle-fill" aria-hidden="true"/> Añadir contenido
-      </b-link>
 		</ul>
 	</li>
 </template>
@@ -82,27 +74,6 @@ export default {
       }
       this.$emit('sizeChange');
     },
-    cancel() {
-      this.element = '';
-      this.add = false;
-    },
-    async save() {
-      if (this.element !== '') {
-        await axios({
-          method: 'post',
-          headers: { Authorization: `Bearer ${this.token}` },
-          url: `http://localhost:8080/api/Content`,
-          data: {
-            name: this.element,
-            trainingId: this.trainingId,
-          }
-        }).then((data: any) =>{
-          this.element = '';
-          this.add = false;
-          this.$emit('refresh');
-        });
-      }
-    }
   },
   mounted(){
     this.counter = this.contents.length;
