@@ -15,6 +15,7 @@
             :token="token"
             :iconsHidden="iconsHidden"
             @hide="$emit('sizeChange')"
+            @refresh="$emit('refresh')"
           />
         </div>
       </ul>
