@@ -18,8 +18,22 @@
           />
         </div>
       </ul>
+        <div v-if="!iconsHidden">
+          <b-link @click="$bvModal.show(`add-value-${otherData.id}`)">
+            <b-icon icon="plus-circle-fill" aria-hidden="true"/> Añadir elemento
+          </b-link>
+        </div>
     </li>
 		<b-modal 
+			:id="`add-value-${otherData.id}`"
+			title="Añadir Formación"
+			ok-title="Guardar"
+			@ok="save"
+			@cancel="cancel"
+		>
+			<label>Nombre</label> <input type="text" v-model="valueNew" /> <br />
+		</b-modal>
+		<b-modal
 			:id="`edit-other-${otherData.id}`"
 			title="Editar Otros"
 			ok-title="Guardar"
@@ -58,9 +72,31 @@ export default {
   data() {
 		return {
       hide: false,
+      add: false,
+      valueNew: '',
     }
 	},
   methods: {
+    cancel() {
+      this.valueNew = '';
+      this.add = false;
+    },
+    async save() {
+      if (this.valueNew !== '') {
+        await axios({
+          method: 'post',
+          headers: { Authorization: `Bearer ${this.token}` },
+          url: `http://localhost:8080/api/Value`,
+          data: {
+            name: this.valueNew,
+            otherDataId: this.otherData.id
+          }
+        }).then((data: any) =>{
+          this.cancel();
+          this.$emit('refresh');
+        });
+      }
+    },
 		async update() {
 			await axios({
 			method: 'put',

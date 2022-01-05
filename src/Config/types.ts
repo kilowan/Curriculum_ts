@@ -73,7 +73,10 @@ export interface CurriculumDetail extends base{
   }
   export interface OtherData extends base {
     name: string;
-    values: Array<string>;
+    values: Array<Value>;
+  }
+  export interface Value extends base {
+    name: string;
   }
   export interface Credentials extends base {
     username: string;
