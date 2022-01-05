@@ -1,31 +1,45 @@
 <template>
-	<li>
-    {{ contract.name }}
-    <b-link v-if="!iconsHidden" @click="contracted = !contracted, $emit('contract')">
-      <b-icon v-if="contracted" icon="chevron-up"/>
-      <b-icon v-if="!contracted" icon="chevron-down"/>
-    </b-link>
-    <ul v-if="contract.projects.length > 0">
-      <div>
-        <project-list-view
-          v-if="contracted" 
-          :projects="contract.projects"
-          :iconsHidden="iconsHidden"
-          :token="token"
-          @contract="$emit('contract')"
-          @refresh="$emit('refresh')"
-        />
-      </div>
-    </ul>
-      <div v-if="add">
-        <input class="m-2" type="text" v-model="projectData" />
-        <b-button class="m-2" @click="save">Guardar</b-button>
-        <b-button class="m-2" @click="cancel">Cancelar</b-button>
-      </div>
-    <b-link v-if="!add && !iconsHidden" @click="add = true">
-      <b-icon icon="plus-circle-fill" aria-hidden="true"/> Añadir proyecto
-    </b-link>
-	</li>
+  <div>
+    <li>
+      {{ contract.name }}
+      <b-link v-if="!iconsHidden" @click="contracted = !contracted, $emit('contract')">
+        <b-icon v-if="contracted" icon="chevron-up"/>
+        <b-icon v-if="!contracted" icon="chevron-down"/>
+      </b-link>
+      <b-link v-if="!iconsHidden" @click="$bvModal.show(`edit-contract-${contract.id}`)">
+        <b-icon icon="pencil-square" aria-hidden="true"/>
+      </b-link>
+      <ul v-if="contract.projects.length > 0">
+        <div>
+          <project-list-view
+            v-if="contracted"
+            :projects="contract.projects"
+            :iconsHidden="iconsHidden"
+            :token="token"
+            @contract="$emit('contract')"
+            @refresh="$emit('refresh')"
+          />
+        </div>
+      </ul>
+        <div v-if="add">
+          <input class="m-2" type="text" v-model="projectData" />
+          <b-button class="m-2" @click="save">Guardar</b-button>
+          <b-button class="m-2" @click="cancel">Cancelar</b-button>
+        </div>
+      <b-link v-if="!add && !iconsHidden" @click="add = true">
+        <b-icon icon="plus-circle-fill" aria-hidden="true"/> Añadir proyecto
+      </b-link>
+    </li>
+		<b-modal 
+			:id="`edit-contract-${contract.id}`"
+			title="Editar contrato"
+			ok-title="Guardar"
+			@ok="update"
+			@cancel="cancel"
+		>
+			<input type="text" v-model="contract.name" /> <br />
+		</b-modal>
+  </div>
 </template>
 
 
@@ -80,7 +94,19 @@ export default {
           this.$emit('refresh');
         });
       }
-    }
+    },
+		async update() {
+			await axios({
+			method: 'put',
+			headers: { Authorization: `Bearer ${this.token}` },
+			url: `http://localhost:8080/api/Contract/${this.contract.id}`,
+			data: {
+					contractName: this.contract.name
+				}
+			}).then((data: any) =>{
+				this.$emit('refresh');
+			});
+		}
   },
 }
 </script>
