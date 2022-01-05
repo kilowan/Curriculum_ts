@@ -6,7 +6,14 @@
 		<b-icon v-if="!contract" icon="chevron-down"/>
 	</b-link>
 	<ul v-if="contract">
-		<li v-for="(description, fourthindex) in project.descriptionList" v-bind:key="fourthindex">{{description}}</li>
+		<div v-for="(description, fourthindex) in project.descriptionList" v-bind:key="fourthindex">
+      <description-view
+        :iconsHidden="iconsHidden"
+        :token="token"
+        :description="description"
+        @refresh="$emit('refresh')"
+      />
+    </div>
 	</ul>
   <div v-if="add">
     <input class="m-2" type="text" v-model="description" />
@@ -25,9 +32,13 @@
 
 <script lang="ts">
 import axios from 'axios';
+import descriptionView from './DescriptionView.vue'
 
 export default {
   name: 'ProjectView',
+  components: {
+    descriptionView
+  },
   props:{
     project: {
       type: Object,

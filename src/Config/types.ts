@@ -41,7 +41,10 @@ export interface CurriculumDetail extends base{
   }
   export interface Project extends base {
     name: string;
-    descriptionList: Array<string>;
+    descriptionList: Array<Description>;
+  }
+  export interface Description extends base {
+    name: string;
   }
   export interface Training extends base {
     name: string;
