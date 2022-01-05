@@ -29,9 +29,11 @@
           <b-button class="m-2" @click="save">Guardar</b-button>
           <b-button class="m-2" @click="cancel">Cancelar</b-button>
         </div>
-      <b-link v-if="!add && !iconsHidden" @click="add = true">
-        <b-icon icon="plus-circle-fill" aria-hidden="true"/> Añadir proyecto
-      </b-link>
+        <div>
+          <b-link v-if="!add && !iconsHidden" @click="add = true">
+            <b-icon icon="plus-circle-fill" aria-hidden="true"/> Añadir proyecto
+          </b-link>
+        </div>
     </li>
 		<b-modal 
 			:id="`edit-contract-${contract.id}`"

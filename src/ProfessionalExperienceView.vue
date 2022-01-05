@@ -40,6 +40,7 @@
 			ok-title="Guardar"
 			@ok="update"
 			@cancel="cancel"
+			@refresh="$emit('refresh')"
 		>
 			<label>Nombre</label> <input type="text" v-model="company.name" /> <br />
 			<label>Centro/Lugar:</label> <input type="text" v-model="company.place" /> <br />
