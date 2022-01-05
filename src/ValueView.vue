@@ -1,20 +1,35 @@
 <template>
-	<li v-if="!hide">
-    {{value}}
-		<b-link v-if="!iconsHidden" @click="hide = true, $emit('hide')">
-			<b-icon icon="eye-slash-fill"/>
-		</b-link>
-	</li>
+<div>
+    <li v-if="!hide">
+      {{ value.name }}
+      <b-link v-if="!iconsHidden" @click="hide = true, $emit('hide')">
+        <b-icon icon="eye-slash-fill"/>
+      </b-link>
+      <b-link v-if="!iconsHidden" @click="$bvModal.show(`edit-value-${value.id}`)">
+        <b-icon icon="pencil-square" aria-hidden="true"/>
+      </b-link>
+    </li>
+		<b-modal 
+			:id="`edit-value-${value.id}`"
+			title="Editar Experiencia"
+			ok-title="Guardar"
+			@ok="update"
+			@cancel="cancel"
+		>
+			<label>Nombre:</label> <input type="text" v-model="value.name" /> <br />
+		</b-modal>
+</div>
 </template>
 
 
 <script lang="ts">
+import axios from 'axios';
 
 export default {
   name: 'ValueView',
   props:{
     value: {
-      type: String,
+      type: Object,
       required: true
     },
     token: {
@@ -31,6 +46,20 @@ export default {
       hide: false,
     }
 	},
+  methods: {
+		async update() {
+			await axios({
+			method: 'put',
+			headers: { Authorization: `Bearer ${this.token}` },
+			url: `http://localhost:8080/api/Value/${this.value.id}`,
+			data: {
+					name: this.value.name,
+				}
+			}).then((data: any) =>{
+				this.$emit('refresh');
+			});
+		}
+  }
 }
 </script>
 
