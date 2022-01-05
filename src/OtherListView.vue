@@ -14,6 +14,7 @@
             :iconsHidden="iconsHidden"
             @hide="hidden"
             @sizeChange="$emit('sizeChange')"
+            @refresh="$emit('refresh')"
           />
 				</div>
 			</ul>
