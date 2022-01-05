@@ -1,25 +1,40 @@
 <template>
-	<li v-if="!hide">
-    {{otherData.name}}
-		<b-link v-if="!iconsHidden" @click="hide = true, $emit('hide')">
-			<b-icon icon="eye-slash-fill"/>
-		</b-link>
-    <ul v-if="otherData.values.length > 0">
-      <div v-for="(value, secondindex) in otherData.values" v-bind:key="secondindex">
-        <value-view
-          :value="value"
-          :token="token"
-          :iconsHidden="iconsHidden"
-          @hide="$emit('sizeChange')"
-        />
-      </div>
-    </ul>
-	</li>
+  <div>
+    <li v-if="!hide">
+      {{otherData.name}}
+      <b-link v-if="!iconsHidden" @click="hide = true, $emit('hide')">
+        <b-icon icon="eye-slash-fill"/>
+      </b-link>
+      <b-link v-if="!iconsHidden" @click="$bvModal.show(`edit-other-${otherData.id}`)">
+        <b-icon icon="pencil-square" aria-hidden="true"/>
+      </b-link>
+      <ul v-if="otherData.values.length > 0">
+        <div v-for="(value, secondindex) in otherData.values" v-bind:key="secondindex">
+          <value-view
+            :value="value"
+            :token="token"
+            :iconsHidden="iconsHidden"
+            @hide="$emit('sizeChange')"
+          />
+        </div>
+      </ul>
+    </li>
+		<b-modal 
+			:id="`edit-other-${otherData.id}`"
+			title="Editar Otros"
+			ok-title="Guardar"
+			@ok="update"
+			@cancel="cancel"
+		>
+      <label>Nombre:</label> <input type="text" v-model="otherData.name" /> <br />
+		</b-modal>
+  </div>
 </template>
 
 
 <script lang="ts">
 import valueView from './ValueView.vue';
+import axios from 'axios';
 
 export default {
   name: 'OtherView',
@@ -45,6 +60,20 @@ export default {
       hide: false,
     }
 	},
+  methods: {
+		async update() {
+			await axios({
+			method: 'put',
+			headers: { Authorization: `Bearer ${this.token}` },
+			url: `http://localhost:8080/api/OtherData/${this.otherData.id}`,
+			data: {
+					name: this.otherData.name
+				}
+			}).then((data: any) =>{
+				this.$emit('refresh');
+			});
+		}
+  }
 }
 </script>
 
