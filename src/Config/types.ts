@@ -1,4 +1,7 @@
-export interface CurriculumDetail extends ObjectConstructor{
+export interface base {
+  id: number;
+}
+export interface CurriculumDetail extends base{
     curriculumName: string;
     fullName: string;
     description: string;
@@ -11,21 +14,20 @@ export interface CurriculumDetail extends ObjectConstructor{
     socialMedia: Array<SocialMedia>;
     otherData: Array<OtherData>;
   }
-  export interface Curriculum extends ObjectConstructor{
+  export interface Curriculum extends base {
     curriculumName: string;
     curriculumId: number;
   }
-  export interface PhoneNumber extends ObjectConstructor {
+  export interface PhoneNumber extends base {
     number: number;
     prefix: string;
   }
-  export interface Email extends ObjectConstructor {
+  export interface Email extends base {
     mailName: string;
     domain: string;
     fullEmail: string;
   }
-  export interface Experience extends ObjectConstructor {
-    id: number;
+  export interface Experience extends base {
     name: string;
     type: number;
     place: string;
@@ -33,18 +35,15 @@ export interface CurriculumDetail extends ObjectConstructor{
     finishDate?: string;
     contracts: Array<Contract>;
   }
-  export interface Contract extends ObjectConstructor {
-    id: number;
+  export interface Contract extends base {
     name: string;
     projects: Array<Project>;
   }
-  export interface Project extends ObjectConstructor {
-    id: number;
+  export interface Project extends base {
     name: string;
     descriptionList: Array<string>;
   }
-  export interface Training extends ObjectConstructor {
-    id: number;
+  export interface Training extends base {
     name: string;
     type: number;
     place: string;
@@ -53,33 +52,30 @@ export interface CurriculumDetail extends ObjectConstructor{
     graduationDate?: string;
     contents: Array<Content>;
   }
-  export interface Content extends ObjectConstructor {
-    id: number;
+  export interface Content extends base {
     name: string;
     edit: boolean;
     subContents: Array<SubContent>;
   }
-  export interface SubContent extends ObjectConstructor {
+  export interface SubContent extends base {
     name: string;
-    id: number;
   }
-  export interface Language {
+  export interface Language extends base {
     name: string;
     level: LanguageLevel;
   }
-  export interface LanguageLevel {
-    id: number;
+  export interface LanguageLevel extends base {
     name: string;
   }
-  export interface SocialMedia extends ObjectConstructor {
+  export interface SocialMedia extends base {
     name: string;
     type: number;
   }
-  export interface OtherData {
+  export interface OtherData extends base {
     name: string;
     values: Array<string>;
   }
-  export interface Credentials {
+  export interface Credentials extends base {
     username: string;
     password: string;
   }

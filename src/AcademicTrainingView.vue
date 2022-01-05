@@ -103,9 +103,9 @@ export default {
 					trainingId: this.academic.id,
 				}
 				}).then((data: any) =>{
-				this.element = '';
-				this.add = false;
-				this.$emit('refresh');
+					this.element = '';
+					this.add = false;
+					this.$emit('refresh');
 				});
 			}
 		},

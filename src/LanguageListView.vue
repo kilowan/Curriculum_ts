@@ -9,10 +9,12 @@
 			<ul>
 				<div v-for="(languages, firstindex) in languageList" v-bind:key="firstindex">
           <language-view 
-            :language="languages" 
-            :token="token" 
-            :iconsHidden="iconsHidden" 
+            :language="languages"
+            :languageLevelList="languageLevelList"
+            :token="token"
+            :iconsHidden="iconsHidden"
             @hide="hiden"
+            @refresh="$emit('refresh')"
           />
 				</div>
 			</ul>
