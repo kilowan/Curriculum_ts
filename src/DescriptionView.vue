@@ -1,7 +1,10 @@
 <template>
   <div>
-    <li>
+    <li v-if="!hide">
       {{description.name}}
+			<b-link v-if="!iconsHidden" @click="$emit('hide'), hide = true">
+				<b-icon icon="eye-slash-fill"/>
+			</b-link>
       <b-link v-if="!iconsHidden" @click="$bvModal.show(`edit-description-${description.id}`)">
         <b-icon icon="pencil-square" aria-hidden="true"/>
       </b-link>
@@ -41,6 +44,7 @@ export default {
 		return {
 			contract: false,
       add: false,
+      hide: false,
 		}
 	},
   methods: {
