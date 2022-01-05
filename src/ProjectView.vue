@@ -6,12 +6,15 @@
         <b-icon v-if="contract" icon="chevron-up"/>
         <b-icon v-if="!contract" icon="chevron-down"/>
       </b-link>
-      <b-link v-if="!iconsHidden" @click="$bvModal.show(`edit-project-${project.id}`)">
-        <b-icon icon="pencil-square" aria-hidden="true"/>
-      </b-link>
 			<b-link v-if="!iconsHidden" @click="$emit('hide'), hideProj = true">
 				<b-icon icon="eye-slash-fill"/>
 			</b-link>
+      <b-link v-if="!iconsHidden" @click="$bvModal.show(`edit-project-${project.id}`)">
+        <b-icon icon="pencil-square" aria-hidden="true"/>
+      </b-link>
+      <b-link @click="$bvModal.show(`delete-project-${project.id}`)">
+        <b-icon icon="x-circle-fill" aria-hidden="true"/>
+      </b-link>
       <ul v-if="contract">
         <div v-for="(description, fourthindex) in project.descriptionList" v-bind:key="fourthindex">
           <description-view
@@ -44,6 +47,16 @@
 		>
 			<input type="text" v-model="project.name" /> <br />
 		</b-modal>
+    <b-modal 
+      :id="`delete-project-${project.id}`" 
+      title="Eliminar Proyecto"
+      ok-title="Eliminar"
+      @ok="deleteProject"
+    >
+      <div style="text-align: center; margin: 0 auto; width:380px;">
+        <h1>¿Seguro que quieres eliminar el proyecto '{{ project.name }}'?</h1>
+      </div>
+    </b-modal>
   </div>
 </template>
 
@@ -118,6 +131,15 @@ export default {
 			data: {
 					name: this.project.name,
 				}
+			}).then((data: any) =>{
+				this.$emit('refresh');
+			});
+		},
+		async deleteProject() {
+			await axios({
+			method: 'delete',
+			headers: { Authorization: `Bearer ${this.token}` },
+			url: `http://localhost:8080/api/Project/${this.project.id}`,
 			}).then((data: any) =>{
 				this.$emit('refresh');
 			});
