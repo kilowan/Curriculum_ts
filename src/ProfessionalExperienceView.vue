@@ -9,8 +9,11 @@
 			<b-link v-if="!iconsHidden" @click="hide = true, $emit('hide')">
 				<b-icon icon="eye-slash-fill"/>
 			</b-link>
-			<b-link v-if="!iconsHidden" @click="$bvModal.show(`edit-experience-${experienceId}`)">
+			<b-link v-if="!iconsHidden" @click="$bvModal.show(`edit-experience-${company.id}`)">
 				<b-icon icon="pencil-square" aria-hidden="true"/>
+			</b-link>
+			<b-link v-if="!iconsHidden" @click="$bvModal.show(`delete-experience-${company.id}`)">
+				<b-icon icon="x-circle-fill" aria-hidden="true"/>
 			</b-link>
 			<ul v-if="contract">
 			<li>Centro/Lugar: {{ company.place }}</li>
@@ -35,7 +38,7 @@
 			</ul>
 		</li>
 		<b-modal 
-			:id="`edit-experience-${experienceId}`"
+			:id="`edit-experience-${company.id}`"
 			title="Editar Experiencia"
 			ok-title="Guardar"
 			@ok="update"
@@ -50,6 +53,16 @@
 			<label>Fecha de fin</label> <b-form-datepicker
 				v-model="company.finishDate"
 				min="2015-01-01" max="2030-12-31"></b-form-datepicker> <br />
+		</b-modal>
+		<b-modal 
+		:id="`delete-experience-${company.id}`" 
+		title="Eliminar Contrato"
+		ok-title="Eliminar"
+		@ok="deleteContract"
+		>
+		<div style="text-align: center; margin: 0 auto; width:380px;">
+			<h1>¿Seguro que quieres eliminar el contrato '{{ company.name }}'?</h1>
+		</div>
 		</b-modal>
 	</div>
 </template>
@@ -77,11 +90,7 @@ export default {
     iconsHidden: {
       type: Boolean,
       required: true
-    },
-    experienceId: {
-      type: Number,
-      required: true
-    },
+    }
   },
   data() {
 		return {
@@ -100,7 +109,7 @@ export default {
 				url: `http://localhost:8080/api/Contract`,
 				data: {
 					contractName: this.contractData,
-					experienceId: this.experienceId,
+					experienceId: this.company.id,
 				}
 				}).then((data: any) =>{
 					this.contractData = '';
@@ -113,13 +122,22 @@ export default {
 			await axios({
 			method: 'put',
 			headers: { Authorization: `Bearer ${this.token}` },
-			url: `http://localhost:8080/api/Experience/${this.experienceId}`,
+			url: `http://localhost:8080/api/Experience/${this.company.id}`,
 			data: {
 					name: this.company.name,
 					place: this.company.place,
 					initDate: this.company.initDate,
 					finishDate: this.company.finishDate
 				}
+			}).then((data: any) =>{
+				this.$emit('refresh');
+			});
+		},
+		async deleteContract() {
+			await axios({
+			method: 'delete',
+			headers: { Authorization: `Bearer ${this.token}` },
+			url: `http://localhost:8080/api/Experience/${this.company.id}`,
 			}).then((data: any) =>{
 				this.$emit('refresh');
 			});
