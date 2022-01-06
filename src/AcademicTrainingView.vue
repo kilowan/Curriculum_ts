@@ -138,9 +138,9 @@ export default {
 		},
 		async deleteTraining() {
 			await axios({
-			method: 'delete',
-			headers: { Authorization: `Bearer ${this.token}` },
-			url: `http://localhost:8080/api/Training/${this.academic.id}`,
+				method: 'delete',
+				headers: { Authorization: `Bearer ${this.token}` },
+				url: `http://localhost:8080/api/Training/${this.academic.id}`,
 			}).then((data: any) =>{
 				this.$emit('refresh');
 			});

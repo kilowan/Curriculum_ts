@@ -10,7 +10,7 @@ export interface CurriculumDetail extends base{
     experience: Array<Experience>;
     otherTraining: Array<Training>;
     academicTraining: Array<Training>;
-    languageList: Array<Language>;
+    languageList: Array<UserLanguage>;
     socialMedia: Array<SocialMedia>;
     otherData: Array<OtherData>;
   }
@@ -63,9 +63,12 @@ export interface CurriculumDetail extends base{
   export interface SubContent extends base {
     name: string;
   }
-  export interface Language extends base {
+  export interface UserLanguage extends base {
     name: string;
     level: LanguageLevel;
+  }
+  export interface Language extends base {
+    name: string;
   }
   export interface LanguageLevel extends base {
     name: string;
