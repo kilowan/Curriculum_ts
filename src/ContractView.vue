@@ -12,6 +12,9 @@
       <b-link v-if="!iconsHidden" @click="$bvModal.show(`edit-contract-${contract.id}`)">
         <b-icon icon="pencil-square" aria-hidden="true"/>
       </b-link>
+      <b-link v-if="!iconsHidden" @click="$bvModal.show(`delete-contract-${contract.id}`)">
+        <b-icon icon="x-circle-fill" aria-hidden="true"/>
+      </b-link>
       <ul v-if="contract.projects.length > 0">
         <div>
           <project-list-view
@@ -44,6 +47,16 @@
 		>
 			<input type="text" v-model="contract.name" /> <br />
 		</b-modal>
+    <b-modal 
+      :id="`delete-contract-${contract.id}`" 
+      title="Eliminar Contrato"
+      ok-title="Eliminar"
+      @ok="deleteContract"
+    >
+      <div style="text-align: center; margin: 0 auto; width:380px;">
+        <h1>¿Seguro que quieres eliminar el contrato '{{ contract.name }}'?</h1>
+      </div>
+    </b-modal>
   </div>
 </template>
 
@@ -109,6 +122,15 @@ export default {
 			data: {
 					contractName: this.contract.name
 				}
+			}).then((data: any) =>{
+				this.$emit('refresh');
+			});
+		},
+		async deleteContract() {
+			await axios({
+			method: 'delete',
+			headers: { Authorization: `Bearer ${this.token}` },
+			url: `http://localhost:8080/api/Contract/${this.contract.id}`,
 			}).then((data: any) =>{
 				this.$emit('refresh');
 			});
