@@ -145,7 +145,7 @@ export default {
 		let other: HTMLElement|null = document.querySelector('#other');
 		if(otros && other) otros.style.height = other.clientHeight + 'px';
 	},
-	async getCurriculum(id: any){
+	async getCurriculum(id: any) {
 		await axios({
 			method: 'get',
 			headers: { Authorization: `Bearer ${this.token}` },

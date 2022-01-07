@@ -1,23 +1,37 @@
 <template>
 	<div v-if="!hide">
-      <b-icon v-if="socialMediaData.type === SocialMediaType.Linkedin" icon="linkedin" aria-hidden="true"/> <a v-if="socialMediaData.type === SocialMediaType.Linkedin" :href="'https://www.' + socialMediaData.name">{{ socialMediaData.name }}</a>
-      <b-icon v-if="socialMediaData.type === SocialMediaType.GitHub" icon="github" aria-hidden="true"/> <a v-if="socialMediaData.type === SocialMediaType.GitHub" :href="socialMediaData.name">{{ socialMediaData.name }}</a>
-      <b-icon v-if="socialMediaData.type === SocialMediaType.Infojobs" icon="link" aria-hidden="true"/> <a v-if="socialMediaData.type === SocialMediaType.Infojobs" :href="socialMediaData.name">{{ socialMediaData.name }}</a>
+      <b-icon v-if="socialMediaData.type.id === SocialMediaType.Linkedin" icon="linkedin" aria-hidden="true"/> <a v-if="socialMediaData.type.id === SocialMediaType.Linkedin" :href="'https://www.' + socialMediaData.name">{{ socialMediaData.name }}</a>
+      <b-icon v-if="socialMediaData.type.id === SocialMediaType.GitHub" icon="github" aria-hidden="true"/> <a v-if="socialMediaData.type.id === SocialMediaType.GitHub" :href="socialMediaData.name">{{ socialMediaData.name }}</a>
+      <b-icon v-if="socialMediaData.type.id === SocialMediaType.Infojobs" icon="link" aria-hidden="true"/> <a v-if="socialMediaData.type.id === SocialMediaType.Infojobs" :href="socialMediaData.name">{{ socialMediaData.name }}</a>
 			<b-link v-if="!iconsHidden" @click="hide = true, $emit('contract')">
 				<b-icon icon="eye-slash-fill"/>
 			</b-link>
+			<b-link v-if="!iconsHidden" @click="$bvModal.show(`edit-social-media-${socialMediaData.id}`)">
+				<b-icon icon="pencil-square" aria-hidden="true"/>
+			</b-link>
+		<b-modal 
+			:id="`edit-social-media-${socialMediaData.id}`"
+			title="Editar red social"
+			ok-title="Guardar"
+			@ok="update"
+			@cancel="cancel"
+		>
+			<label>Url:</label> <input type="text" v-model="socialMediaData.name" /> <br />
+			<label>Tipo:</label> <b-form-select :options="sociamMediaTypes" v-model="socialMediaData.type.id" ></b-form-select> <br />
+		</b-modal>
 	</div>
 </template>
 
 
 <script lang="ts">
 import { SocialMediaType } from './Config/types';
+import axios from 'axios';
 
 export default {
   name: 'SocialMediaView',
   props:{
     socialMediaData: {
-      type: Array,
+      type: Object,
       required: true
     },
     token: {
@@ -32,38 +46,38 @@ export default {
   data() {
 		return {
       SocialMediaType: SocialMediaType,
-      hide: false
+      hide: false,
+      sociamMediaTypes: [],
 		}
 	},
+  methods: {
+		async update() {
+      debugger;
+			await axios({
+			  method: 'put',
+			  headers: { Authorization: `Bearer ${this.token}` },
+			url: `http://localhost:8080/api/SocialMedia/${this.socialMediaData.id}`,
+			data: {
+					name: this.socialMediaData.name,
+          typeId: this.socialMediaData.type.id
+				}
+			}).then((data: any) =>{
+				this.$emit('refresh');
+			});
+		},
+  },
+  async mounted() {
+		await axios({
+			method: 'get',
+			headers: { Authorization: `Bearer ${this.token}` },
+			url: `http://localhost:8080/api/SocialMediaType`,
+		})
+		.then((data: any) => {
+      this.sociamMediaTypes = data.data.map((smt: any) => {
+          return { value: smt.id, text: smt.name };
+        });
+		});
+  }
 }
 </script>
-
-<style>
-* { margin: 0; padding: 0; }
-body { font: 16px Helvetica, Sans-Serif; line-height: 24px; background: url(./images/noise.jpg); }
-.clear { clear: both; }
-.idiomas { border-right: 1px solid #999; }
-.otros { border-right: 1px solid #999; }
-#page-wrap { width: 1000px; margin: 40px auto 60px; }
-#pic { float: right; margin: -30px 0 0 0; height: 100px; }
-h1 { margin: 0 0 16px 0; padding: 0 0 16px 0; font-size: 34px; font-weight: bold; letter-spacing: -2px; border-bottom: 1px solid #999; }
-h2 { font-size: 20px; margin: 0 0 6px 0; position: relative; }
-h2 span { position: absolute; bottom: 0; right: 0; font-style: italic; font-family: Georgia, Serif; font-size: 16px; color: #999; font-weight: normal; }
-p { margin: 0 0 16px 0; }
-a { color: #999; text-decoration: none; border-bottom: 1px dotted #999; }
-a:hover { border-bottom-style: solid; color: black; }
-ul { margin: 0 0 32px 17px; }
-li { font-size: 20px; }
-#objective { width: 100%; float: left; }
-#objective p { font-family: Georgia, Serif; font-style: italic; color: #666; }
-dt { font-style: italic; font-weight: bold; font-size: 18px; text-align: right; padding: 0 26px 0 0; width: 150px; float: left; border-right: 1px solid #999;  }
-dd { width: 800px; float: right; }
-dd.clear { float: none; margin: 0; height: 15px; }
-.formacion { border-right: 1px solid #999; }
-.formacion2 { border-right: 1px solid #999; }
-  .marco {
-    margin:2%;
-	border-style: groove; border-width: 1px;
-  }
-</style>
 
