@@ -75,7 +75,10 @@ export interface CurriculumDetail extends base{
   }
   export interface SocialMedia extends base {
     name: string;
-    type: number;
+    type: MediaType;
+  }
+  export interface MediaType extends base {
+    name: string;
   }
   export interface OtherData extends base {
     name: string;
