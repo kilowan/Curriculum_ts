@@ -82,7 +82,7 @@ export default {
   methods: {
     hidden() {
       this.counter--;
-      if (this.counter == 0) {
+      if (this.counter == 0 && this.academicTraining.length >= 1) {
         this.hide = true;
       }
       this.$emit('sizeChange');

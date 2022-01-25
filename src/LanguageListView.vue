@@ -110,7 +110,7 @@ export default {
     },
     hiden() {
       this.counter--;
-      if (this.counter == 0) {
+      if (this.counter == 0 && this.languageList.length >= 1) {
         this.hide = true;
       }
       this.$emit('sizeChange');

@@ -88,7 +88,7 @@ export default {
 	methods: {
 		hidden() {
 			this.counter--;
-			if (this.counter == 0) {
+			if (this.counter == 0 && this.experience.length >= 1) {
 				this.hide = true;
 			}
 			this.$emit('contract');
@@ -117,7 +117,7 @@ export default {
 					curriculumId: this.curriculumId,
 					name: this.experienceNew,
 					initDate: this.initDate,
-					finishDate: this.finishDate,
+					finishDate: this.finishDate !== ''? this.finishDate : null,
 					place: this.place,
 					type: this.typeSelected
 					}

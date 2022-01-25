@@ -18,7 +18,7 @@
 			<ul v-if="contract">
 			<li>Centro/Lugar: {{ company.place }}</li>
 			<li>Fecha inicio: {{new Date(company.initDate).toLocaleDateString()}}</li>
-			<li>Fecha Fin: {{new Date(company.finishDate).toLocaleDateString()}}</li>
+			<li v-if="company.finishDate">Fecha Fin: {{new Date(company.finishDate).toLocaleDateString()}}</li>
 				<contract-list-view
 					v-if="company.contracts.length > 0" 
 					:contracts="company.contracts" 
